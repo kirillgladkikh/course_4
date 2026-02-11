@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!--<div class="container mt-4">-->
+    <h2>Создать нового Клиента</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.errors }}  <!-- Вывод всех ошибок формы -->
+        {{ form.non_field_errors }}  <!-- Ошибки, не привязанные к полям -->
+
+        <div class="mb-3">
+            <label for="id_email" class="form-label">Контактный email</label>
+            {{ form.email }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_full_name" class="form-label">ФИО</label>
+            {{ form.full_name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_comment" class="form-label">Комментарий</label>
+            {{ form.comment }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_owner" class="form-label">Владелец (User)</label>
+            {{ form.owner }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'mailing:clients_list' %}" class="btn btn-secondary">Назад к списку Клиентов</a>
+    </form>
+<!--</div>-->
+{% endblock %}
