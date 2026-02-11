@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 	# СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
-    # "catalog",
+    "mailing",
     # "blog",
     # "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
 ]
