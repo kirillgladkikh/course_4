@@ -6,6 +6,12 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['email', 'full_name', 'comment', 'owner']
+        labels = {
+            "email": "Контактный email",
+            "full_name": "ФИО",
+            "comment": "Комментарий",
+            "owner": "Владелец (User)",
+        }
         widgets = {
             'comment': forms.Textarea(attrs={'rows': 3}),
         }
