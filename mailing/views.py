@@ -38,7 +38,7 @@ class ClientUpdateView(UpdateView):
     model = Client
     form_class = ClientForm
     template_name = 'client_update.html'
-    success_url = reverse_lazy('clients_list')
+    success_url = reverse_lazy('mailing:clients_list')
 
     def form_valid(self, form):
         messages.success(self.request, 'Клиент обновлён!')
@@ -47,7 +47,7 @@ class ClientUpdateView(UpdateView):
 
 class ClientDeleteView(DeleteView):
     model = Client
-    success_url = reverse_lazy('clients_list')
+    success_url = reverse_lazy('mailing:clients_list')
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Клиент удалён!')
@@ -65,7 +65,7 @@ class ClientDeleteView(DeleteView):
 #     model = Mailing
 #     form_class = MailingForm
 #     template_name = 'mailing_form.html'
-#     success_url = reverse_lazy('mailing_list')
+#     success_url = reverse_lazy('mailing:mailing_list')
 #
 #     def form_valid(self, form):
 #         messages.success(self.request, 'Рассылка создана!')
@@ -76,7 +76,7 @@ class ClientDeleteView(DeleteView):
 #     model = Mailing
 #     form_class = MailingForm
 #     template_name = 'mailing_form.html'
-#     success_url = reverse_lazy('mailing_list')
+#     success_url = reverse_lazy('mailing:mailing_list')
 #
 #     def form_valid(self, form):
 #         messages.success(self.request, 'Рассылка обновлена!')
@@ -85,7 +85,7 @@ class ClientDeleteView(DeleteView):
 #
 # class MailingDeleteView(DeleteView):
 #     model = Mailing
-#     success_url = reverse_lazy('mailing_list')
+#     success_url = reverse_lazy('mailing:mailing_list')
 #
 #     def delete(self, request, *args, **kwargs):
 #         messages.success(request, 'Рассылка удалена!')
@@ -103,7 +103,7 @@ class ClientDeleteView(DeleteView):
 #     model = Message
 #     form_class = MessageForm
 #     template_name = 'message_form.html'
-#     success_url = reverse_lazy('message_list')
+#     success_url = reverse_lazy('mailing:message_list')
 #
 #     def form_valid(self, form):
 #         messages.success(self.request, 'Сообщение создано!')
@@ -114,7 +114,7 @@ class ClientDeleteView(DeleteView):
 #     model = Message
 #     form_class = MessageForm
 #     template_name = 'message_form.html'
-#     success_url = reverse_lazy('message_list')
+#     success_url = reverse_lazy('mailing:message_list')
 #
 #     def form_valid(self, form):
 #         messages.success(self.request, 'Сообщение обновлено!')
@@ -123,7 +123,7 @@ class ClientDeleteView(DeleteView):
 #
 # class MessageDeleteView(DeleteView):
 #     model = Message
-#     success_url = reverse_lazy('message_list')
+#     success_url = reverse_lazy('mailing:message_list')
 #
 #     def delete(self, request, *args, **kwargs):
 #         messages.success(request, 'Сообщение удалено!')

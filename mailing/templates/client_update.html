@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <h2>Создать нового Клиента</h2>
+    <h2>Редактировать профиль Клиента</h2>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -31,8 +31,8 @@
             {{ form.owner }}
         </div>
 
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <a href="{% url 'mailing:clients_list' %}" class="btn btn-secondary">Назад к списку Клиентов</a>
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{% url 'mailing:clients_list' %}" class="btn btn-secondary">Отмена</a>
     </form>
 
 {% endblock %}
