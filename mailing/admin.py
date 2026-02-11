@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Mailing, Message, Log
+from .models import Client #, Mailing, Message, Log
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):

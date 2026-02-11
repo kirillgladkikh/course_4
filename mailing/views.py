@@ -1,8 +1,19 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Client, Mailing, Message, Log
-from .forms import ClientForm, MailingForm, MessageForm
+from .models import Client #, Mailing, Message, Log
+from .forms import ClientForm #, MailingForm, MessageForm
+
+
+# class HomeView(TemplateView):
+#     template_name = 'home_view.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['total_mailings'] = Mailing.objects.count()  # общее количество рассылок
+#         context['active_mailings'] = Mailing.objects.filter(is_active=True).count()  # активные рассылки (предполагается поле is_active)
+#         context['total_clients'] = Client.objects.count()  # количество уникальных получателей
+#         return context
 
 
 # Клиенты (Client)
