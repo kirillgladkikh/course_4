@@ -12,12 +12,13 @@
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-body">
-                <p class="card-text">Контактный email: {{ client.email }}</p>
-                <p class="card-text">ФИО Клиента: {{ client.full_name }}</p>
-                <p class="card-text">Комментарий: {{ client.comment }}</p>
-                <p class="card-text">Владелец: {{ client.owner }}</p>
+                <p class="card-text"><strong>Контактный email:</strong> {{ client.email }}</p>
+                <p class="card-text"><strong>ФИО Клиента:</strong> {{ client.full_name }}</p>
+                <p class="card-text"><strong>Комментарий:</strong> {{ client.comment }}</p>
+                <p class="card-text"><strong>Владелец:</strong> {{ client.owner }}</p>
                 <div class="mt-2">
-                    <a href="{% url 'mailing:client_update' client.pk %}" class="btn btn-sm btn-outline-primary">Изменить</a>
+                    <a href="{% url 'mailing:client_update' client.pk %}" class="btn btn-sm btn-outline-primary">Изменить профиль Клиента</a>
+                    <a href="{% url 'mailing:client_delete' client.pk %}" class="btn btn-sm btn-outline-danger">Удалить Клиента</a>
                 </div>
             </div>
         </div>
