@@ -19,6 +19,7 @@ class ClientForm(forms.ModelForm):
             }),
             'full_name': forms.TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'Фамилия Имя Отчество',
                 'maxlength': '100'  # явно указываем лимит из модели
             }),
             'comment': forms.TextInput(attrs={  # CharField → TextInput
