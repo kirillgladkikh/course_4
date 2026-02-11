@@ -26,8 +26,8 @@ class ClientListView(ListView):
 class ClientCreateView(CreateView):
     model = Client
     form_class = ClientForm
-    template_name = 'client_form.html'
-    success_url = reverse_lazy('client_list')
+    template_name = 'client_create.html'
+    success_url = reverse_lazy('mailing:clients_list')
 
     def form_valid(self, form):
         messages.success(self.request, 'Клиент создан!')
@@ -37,8 +37,8 @@ class ClientCreateView(CreateView):
 class ClientUpdateView(UpdateView):
     model = Client
     form_class = ClientForm
-    template_name = 'client_form.html'
-    success_url = reverse_lazy('client_list')
+    template_name = 'client_update.html'
+    success_url = reverse_lazy('clients_list')
 
     def form_valid(self, form):
         messages.success(self.request, 'Клиент обновлён!')
@@ -47,7 +47,7 @@ class ClientUpdateView(UpdateView):
 
 class ClientDeleteView(DeleteView):
     model = Client
-    success_url = reverse_lazy('client_list')
+    success_url = reverse_lazy('clients_list')
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Клиент удалён!')

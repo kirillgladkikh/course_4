@@ -13,7 +13,22 @@ class ClientForm(forms.ModelForm):
             "owner": "Владелец (User)",
         }
         widgets = {
-            'comment': forms.Textarea(attrs={'rows': 3}),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'example@domain.com'
+            }),
+            'full_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'maxlength': '100'  # явно указываем лимит из модели
+            }),
+            'comment': forms.TextInput(attrs={  # CharField → TextInput
+                'class': 'form-control',
+                'maxlength': '255',
+                'placeholder': 'Кратко о клиенте...'
+            }),
+            'owner': forms.Select(attrs={
+                'class': 'form-select'  # для ForeignKey лучше form-select
+            }),
         }
 
 # # Рассылки (Mailing)
