@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <h2>Удалить Сообщение</h2>
+
+    <div class="alert alert-warning">
+        <strong>Действительно хотите удалить Сообщение?</strong>
+        <p><em>"{{ object.subject }}"</em></p>  <!-- Здесь было mailing.title → меняем на object.title -->
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="d-grid gap-2 d-md-block">
+            <button type="submit" class="btn btn-danger">
+                Удалить Сообщение
+            </button>
+            <a href="{% url 'mailing:messages_list.html' %}" class="btn btn-secondary">
+                Отменить
+            </a>
+        </div>
+    </form>
+
+{% endblock %}
