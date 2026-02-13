@@ -1,14 +1,12 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import View, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 
 # Попытки рассылки (Log)
-from django.views.generic import View
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.contrib import messages
 
 
 # class HomeView(TemplateView):
@@ -149,6 +147,21 @@ class MailingDeleteView(DeleteView):
 # from django.http import JsonResponse
 # from django.shortcuts import get_object_or_404
 # from django.contrib import messages
+
+# from django.views.generic import ListView
+# from .models import Mailing
+
+class MailingSendListView(ListView):
+    model = Mailing
+    template_name = "mailing_send.html"
+    context_object_name = "mailings"
+
+    def get_queryset(self):
+        # Пересчитываем статус для каждой рассылки перед отображением
+        qs = super().get_queryset()
+        for mailing in qs:
+            mailing.update_status()
+        return qs
 
 
 class SendMailingView(View):
