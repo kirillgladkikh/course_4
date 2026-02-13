@@ -13,10 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from django.conf.global_settings import STATICFILES_DIRS, MEDIA_URL, MEDIA_ROOT
 
 load_dotenv()
-
-from django.conf.global_settings import STATICFILES_DIRS, MEDIA_URL, MEDIA_ROOT
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,8 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # ВАЖНО:
-# 1. АКТУАЛЬНЫЙ SECRET_KEY ДЛЯ ПРОЕКТА БЕРЕМ ИЗ СОЗДАННОГО ДЖАНГО settings.py КОМАНДОЙ "django-admin startproject config ."
-# 2. ВСТАВЛЯЕМ ЭТОТ АКТУАЛЬНЫЙ SECRET_KEY В ФАЙЛ .env !!!
+# 1.АКТУАЛЬНЫЙ SECRET_KEY ДЛЯ ПРОЕКТА БЕРЕМ ИЗ СОЗДАННОГО ДЖАНГО settings.py КОМАНДОЙ "django-admin startproject config"
+# 2.ВСТАВЛЯЕМ ЭТОТ АКТУАЛЬНЫЙ SECRET_KEY В ФАЙЛ .env !!!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"  # или DEBUG = True if os.getenv('DEBUG') == "True" else False
@@ -139,10 +138,11 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]  # Квадратные скобки обязательны, так как это список путей.
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(
-    BASE_DIR, "media"
-)  # классический и надёжный вариант для MEDIA_ROOT. Подходит для старых версий Python/Django.
-# MEDIA_ROOT = BASE_DIR / "media"  # современный и предпочтительный синтаксис (если проект использует pathlib). Эквивалентен os.path.join, но чище.
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# классический и надёжный вариант для MEDIA_ROOT. Подходит для старых версий Python/Django.
+
+# MEDIA_ROOT = BASE_DIR / "media"  # современный и предпочтительный синтаксис (если проект использует pathlib).
+# Эквивалентен os.path.join, но чище.
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
