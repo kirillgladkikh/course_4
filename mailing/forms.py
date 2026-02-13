@@ -62,6 +62,37 @@ class MessageForm(forms.ModelForm):
         }
 
 
+# Рассылки (Mailing)
+class MailingForm(forms.ModelForm):
+    class Meta:
+        model = Mailing
+        fields = ['start_time', 'end_time', 'message', 'clients', 'owner']
+        widgets = {
+            'start_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'class': 'form-control'}
+            ),
+            'end_time': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'class': 'form-control'}
+            ),
+            'message': forms.Select(attrs={'class': 'form-select'}),
+            'clients': forms.SelectMultiple(attrs={'class': 'form-select'}),
+            'owner': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+
+        if start_time and start_time < timezone.now():
+            raise forms.ValidationError("Дата начала не может быть в прошлом.")
+
+        if start_time and end_time and start_time >= end_time:
+            raise forms.ValidationError("Дата начала должна быть раньше даты окончания.")
+
+        return cleaned_data
+
+
 # # Рассылки (Mailing)
 # class MailingForm(forms.ModelForm):
 #     class Meta:
