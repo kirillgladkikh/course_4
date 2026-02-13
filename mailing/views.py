@@ -57,39 +57,39 @@ class ClientDeleteView(DeleteView):
 # Сообщения (Message)
 class MessageListView(ListView):
     model = Message
-    template_name = 'messages_list.html'
-    context_object_name = 'messages'
+    template_name = "messages_list.html"
+    context_object_name = "messages"
 
 
 class MessageCreateView(CreateView):
     model = Message
     form_class = MessageForm
-    template_name = 'message_create.html'
-    success_url = reverse_lazy('mailing:messages_list')
+    template_name = "message_create.html"
+    success_url = reverse_lazy("mailing:messages_list")
 
     def form_valid(self, form):
-        messages.success(self.request, 'Сообщение создано!')
+        messages.success(self.request, "Сообщение создано!")
         return super().form_valid(form)
 
 
 class MessageUpdateView(UpdateView):
     model = Message
     form_class = MessageForm
-    template_name = 'message_update.html'
-    success_url = reverse_lazy('mailing:messages_list')
+    template_name = "message_update.html"
+    success_url = reverse_lazy("mailing:messages_list")
 
     def form_valid(self, form):
-        messages.success(self.request, 'Сообщение обновлено!')
+        messages.success(self.request, "Сообщение обновлено!")
         return super().form_valid(form)
 
 
 class MessageDeleteView(DeleteView):
     model = Message
     template_name = "message_delete.html"
-    success_url = reverse_lazy('mailing:messages_list')
+    success_url = reverse_lazy("mailing:messages_list")
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, 'Сообщение удалено!')
+        messages.success(request, "Сообщение удалено!")
         return super().delete(request, *args, **kwargs)
 
 

@@ -11,8 +11,8 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ['subject', 'owner']
-    list_filter = ['owner']
+    list_display = ["subject", "owner"]
+    list_filter = ["owner"]
 
 
 # @admin.register(Mailing)

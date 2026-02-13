@@ -37,7 +37,7 @@ class ClientForm(forms.ModelForm):
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['subject', 'body', 'owner']
+        fields = ["subject", "body", "owner"]
         labels = {
             "subject": "Тема письма",
             "body": "Тело письма",
@@ -51,11 +51,11 @@ class MessageForm(forms.ModelForm):
                     "maxlength": "200",  # явно указываем лимит из модели
                 }
             ),
-            'body': forms.Textarea(
+            "body": forms.Textarea(
                 attrs={
                     "class": "form-control",
                     "placeholder": "Тело письма",
-                    'rows': 10,
+                    "rows": 10,
                 }
             ),
             "owner": forms.Select(attrs={"class": "form-select"}),  # для ForeignKey лучше form-select
@@ -72,4 +72,3 @@ class MessageForm(forms.ModelForm):
 #             'end_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
 #         }
 #
-
