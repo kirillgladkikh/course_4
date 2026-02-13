@@ -17,9 +17,9 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'start_datetime', 'status', 'owner']
+    list_display = ['id', 'start_time', 'status', 'owner']
     list_filter = ['status', 'owner']
-    date_hierarchy = 'start_datetime'
+    date_hierarchy = 'start_time'
 
 
 # @admin.register(Log)
