@@ -12,22 +12,30 @@
         {{ form.non_field_errors }}  <!-- Ошибки, не привязанные к полям -->
 
         <div class="mb-3">
-            <label for="id_email" class="form-label">Контактный email</label>
+            <label for="id_email" class="form-label">Контактный email
+                <span class="text-danger">*</span>
+            </label>
             {{ form.email }}
         </div>
 
         <div class="mb-3">
-            <label for="id_full_name" class="form-label">ФИО</label>
+            <label for="id_full_name" class="form-label">ФИО
+                <span class="text-danger">*</span>
+            </label>
             {{ form.full_name }}
         </div>
 
         <div class="mb-3">
-            <label for="id_comment" class="form-label">Комментарий</label>
+            <label for="id_comment" class="form-label">Комментарий
+                <span class="text-danger">*</span>
+            </label>
             {{ form.comment }}
         </div>
 
         <div class="mb-3">
-            <label for="id_owner" class="form-label">Владелец (User)</label>
+            <label for="id_owner" class="form-label">Владелец (User)
+                <span class="text-danger">*</span>
+            </label>
             {{ form.owner }}
         </div>
 

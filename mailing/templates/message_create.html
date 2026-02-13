@@ -12,17 +12,23 @@
         {{ form.non_field_errors }}  <!-- Ошибки, не привязанные к полям -->
 
         <div class="mb-3">
-            <label for="id_subject" class="form-label">Тема письма</label>
+            <label for="id_subject" class="form-label">Тема письма
+                <span class="text-danger">*</span>
+            </label>
             {{ form.subject }}
         </div>
 
         <div class="mb-3">
-            <label for="id_body" class="form-label">Тело письма</label>
+            <label for="id_body" class="form-label">Тело письма
+                <span class="text-danger">*</span>
+            </label>
             {{ form.body }}
         </div>
 
         <div class="mb-3">
-            <label for="id_owner" class="form-label">Владелец (User)</label>
+            <label for="id_owner" class="form-label">Владелец (User)
+                <span class="text-danger">*</span>
+            </label>
             {{ form.owner }}
         </div>
 
