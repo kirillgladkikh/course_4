@@ -1,6 +1,11 @@
 from django.core.management.base import BaseCommand
 from mailing.models import Mailing
 
+
+# Запуск из консоли:
+# python manage.py send_mailing 1
+# (где 1 — ID рассылки)
+
 class Command(BaseCommand):
     help = 'Отправляет рассылку по ID'
 
