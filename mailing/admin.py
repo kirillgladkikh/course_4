@@ -1,11 +1,19 @@
 from django.contrib import admin
-from .models import Client #, Mailing, Message, Log
+from .models import Client, Message  # , Mailing, Log
+
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'email', 'owner']
+    list_display = ["full_name", "email", "owner"]
+    list_filter = ["owner"]
+    search_fields = ["full_name", "email"]
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ['subject', 'owner']
     list_filter = ['owner']
-    search_fields = ['full_name', 'email']
+
 
 # @admin.register(Mailing)
 # class MailingAdmin(admin.ModelAdmin):
@@ -13,11 +21,7 @@ class ClientAdmin(admin.ModelAdmin):
 #     list_filter = ['status', 'owner']
 #     date_hierarchy = 'start_datetime'
 #
-# @admin.register(Message)
-# class MessageAdmin(admin.ModelAdmin):
-#     list_display = ['subject', 'owner']
-#     list_filter = ['owner']
-#
+
 # @admin.register(Log)
 # class LogAdmin(admin.ModelAdmin):
 #     list_display = ['datetime', 'status', 'mailing']
