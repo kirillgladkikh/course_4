@@ -1,5 +1,5 @@
 from django import forms
-from .models import Client, Message  # , Mailing
+from .models import Client, Message, Mailing
 
 
 # Клиенты (Client)
