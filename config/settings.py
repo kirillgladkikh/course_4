@@ -40,16 +40,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-	# ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
-	# - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
-	# (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
+    # ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
+    # - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
+    # (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-	# СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
+    # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "mailing",
     # "blog",
     # "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
