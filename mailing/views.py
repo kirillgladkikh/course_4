@@ -1,8 +1,15 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Client, Message, Mailing  # , Log
+from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
+
+# Попытки рассылки (Log)
+from django.views.generic import View
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+
 
 # class HomeView(TemplateView):
 #     template_name = 'home_view.html'
@@ -135,3 +142,34 @@ class MailingDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Рассылка удалена!")
         return super().delete(request, *args, **kwargs)
+
+
+# Попытки рассылки (Log)
+# from django.views.generic import View
+# from django.http import JsonResponse
+# from django.shortcuts import get_object_or_404
+# from django.contrib import messages
+
+
+class SendMailingView(View):
+    def post(self, request, pk):
+        mailing = get_object_or_404(Mailing, pk=pk)
+        try:
+            mailing.send_mailing()
+            messages.success(request, "Рассылка запущена!")
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Рассылка запущена'
+            })
+        except ValueError as e:
+            messages.error(request, str(e))
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            })
+        except Exception as e:
+            messages.error(request, f"Ошибка при отправке: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': f"Ошибка при отправке: {str(e)}"
+            })
