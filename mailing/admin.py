@@ -24,6 +24,7 @@ class MailingAdmin(admin.ModelAdmin):
 
     def log_count(self, obj):
         return obj.logs.count()
+
     log_count.short_description = "Количество попыток"
 
 

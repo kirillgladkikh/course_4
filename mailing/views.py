@@ -5,7 +5,6 @@ from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
 
-
 # class HomeView(TemplateView):
 #     template_name = 'home_view.html'
 #
@@ -157,19 +156,19 @@ class SendMailingView(View):
         # Получаем конкретную рассылку для подтверждения
         mailing = get_object_or_404(Mailing, pk=pk)
         mailing.update_status()  # обновляем статус перед показом
-        return render(request, 'mailing_send.html', {'mailing': mailing})
+        return render(request, "mailing_send.html", {"mailing": mailing})
 
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
         try:
             mailing.send_mailing()
-            mailing.status = 'running'
+            mailing.status = "running"
             mailing.save()
             messages.success(request, "Рассылка запущена!")
-            return redirect('mailing:mailing_send_list')  # возвращаемся к списку
+            return redirect("mailing:mailing_send_list")  # возвращаемся к списку
         except Exception as e:
             messages.error(request, f"Ошибка при отправке: {str(e)}")
-            return render(request, 'mailing_send.html', {'mailing': mailing, 'error': str(e)})
+            return render(request, "mailing_send.html", {"mailing": mailing, "error": str(e)})
 
 
 # Попытки рассылки (Log)
@@ -177,7 +176,7 @@ class LogListView(ListView):
     model = Log
     template_name = "mailing_log.html"
     context_object_name = "logs"
-    ordering = ['-attempt_time']  # сортировка по времени (новые сверху)
+    ordering = ["-attempt_time"]  # сортировка по времени (новые сверху)
 
     def get_queryset(self):
-        return Log.objects.select_related('mailing', 'client').order_by('-attempt_time')
+        return Log.objects.select_related("mailing", "client").order_by("-attempt_time")

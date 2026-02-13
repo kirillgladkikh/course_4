@@ -99,24 +99,14 @@ class Mailing(models.Model):
                     fail_silently=False,
                 )
                 # Запись успешной попытки
-                Log.objects.create(
-                    mailing=self,
-                    client=client,
-                    status='Успешно',
-                    server_response=''
-                )
+                Log.objects.create(mailing=self, client=client, status="Успешно", server_response="")
             except Exception as e:
                 # Запись неудачной попытки с текстом ошибки
-                Log.objects.create(
-                    mailing=self,
-                    client=client,
-                    status='Не успешно',
-                    server_response=str(e)
-                )
+                Log.objects.create(mailing=self, client=client, status="Не успешно", server_response=str(e))
 
         # Обновляем статус рассылки
         self.status = self.STATUS_RUNNING
-        self.save(update_fields=['status'])
+        self.save(update_fields=["status"])
 
 
 # Модель "Попытки рассылки (Логи)"
@@ -128,14 +118,10 @@ class Log(models.Model):
         (ERROR, ERROR),
     ]
 
-    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name='logs')
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name="logs")
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     attempt_time = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время попытки")
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        verbose_name="Статус"
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name="Статус")
     server_response = models.TextField(blank=True, null=True, verbose_name="Ответ почтового сервера")
 
     def __str__(self):
