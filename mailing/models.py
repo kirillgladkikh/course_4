@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Модель "Клиент (USERS)"
@@ -74,6 +76,47 @@ class Mailing(models.Model):
         if self.status != new_status:
             self.status = new_status
             self.save(update_fields=["status"])
+
+    def send_mailing(self):
+        now = timezone.now()
+
+        # Проверка: текущее время в интервале [start_time, end_time]?
+        if not (self.start_time <= now <= self.end_time):
+            raise ValueError(
+                f"Рассылка не может быть отправлена. Текущее время {now} не входит в интервал "
+                f"[{self.start_time}, {self.end_time}]."
+            )
+
+        # Перебираем всех получателей
+        for client in self.clients.all():
+            try:
+                # Отправка письма
+                send_mail(
+                    subject=self.message.subject,
+                    message=self.message.body,
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[client.email],
+                    fail_silently=False,
+                )
+                # Запись успешной попытки
+                Log.objects.create(
+                    mailing=self,
+                    client=client,
+                    status='Успешно',
+                    server_response=''
+                )
+            except Exception as e:
+                # Запись неудачной попытки с текстом ошибки
+                Log.objects.create(
+                    mailing=self,
+                    client=client,
+                    status='Не успешно',
+                    server_response=str(e)
+                )
+
+        # Обновляем статус рассылки
+        self.status = self.STATUS_RUNNING
+        self.save(update_fields=['status'])
 
 
 # Модель "Попытки рассылки (Логи)"
