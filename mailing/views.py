@@ -180,4 +180,4 @@ class LogListView(ListView):
     ordering = ['-attempt_time']  # сортировка по времени (новые сверху)
 
     def get_queryset(self):
-        return Log.objects.select_related('mailing', 'client').all()
+        return Log.objects.select_related('mailing', 'client').order_by('-attempt_time')
