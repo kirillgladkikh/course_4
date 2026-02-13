@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>
+    {% if object %}
+        Редактировать Рассылку №{{ object.id }}
+    {% else %}
+        Создать новую Рассылку
+    {% endif %}
+</h2>
+
+<form method="post" class="needs-validation">
+    {% csrf_token %}
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            Пожалуйста, исправьте ошибки ниже.
+        </div>
+    {% endif %}
+
+    <div class="mb-3">
+        <label for="{{ form.start_time.id_for_label }}" class="form-label">
+            Дата и время начала отправки <span class="text-danger">*</span>
+        </label>
+        {{ form.start_time }}
+        {% if form.start_time.errors %}
+            <div class="invalid-feedback d-block">{{ form.start_time.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.end_time.id_for_label }}" class="form-label">
+            Дата и время окончания отправки <span class="text-danger">*</span>
+        </label>
+        {{ form.end_time }}
+        {% if form.end_time.errors %}
+            <div class="invalid-feedback d-block">{{ form.end_time.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.message.id_for_label }}" class="form-label">
+            Сообщение (Письмо) <span class="text-danger">*</span>
+        </label>
+        {{ form.message }}
+        {% if form.message.errors %}
+            <div class="invalid-feedback d-block">{{ form.message.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.clients.id_for_label }}" class="form-label">
+            Получатели (Клиенты) <span class="text-danger">*</span>
+        </label>
+        {{ form.clients }}
+        {% if form.clients.errors %}
+            <div class="invalid-feedback d-block">{{ form.clients.errors }}</div>
+        {% endif %}
+        <small class="text-muted">Выберите Клиентов, которые получат это Письмо.</small>
+    </div>
+
+    <!-- Поле owner (скрыто, если пользователь не админ) -->
+    {% if request.user.is_superuser %}
+    <div class="mb-3">
+        <label for="{{ form.owner.id_for_label }}" class="form-label">Владелец</label>
+        {{ form.owner }}
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{% url 'mailing:mailing_list' %}" class="btn btn-secondary">Назад к списку</a>
+</form>
+
+{% endblock %}
