@@ -20,6 +20,11 @@ class MailingAdmin(admin.ModelAdmin):
     list_display = ["id", "start_time", "status", "owner"]
     list_filter = ["status", "owner"]
     date_hierarchy = "start_time"
+    list_display = ["id", "start_time", "status", "owner", "log_count"]  # добавляем подсчёт логов
+
+    def log_count(self, obj):
+        return obj.logs.count()
+    log_count.short_description = "Количество попыток"
 
 
 @admin.register(Log)
