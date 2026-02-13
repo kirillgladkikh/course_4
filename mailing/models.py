@@ -144,25 +144,3 @@ class Log(models.Model):
     class Meta:
         verbose_name = "Попытка рассылки"
         verbose_name_plural = "Попытки рассылок"
-
-
-# # Модель "Логи (Попытки рассылки)"
-# class Log(models.Model):
-#     SUCCESS = "Успешно"
-#     ERROR = "Ошибка"
-#     STATUS_CHOICES = [
-#         (SUCCESS, "Успешно"),
-#         (ERROR, "Ошибка"),
-#     ]
-#
-#     datetime = models.DateTimeField(verbose_name="Дата и время")
-#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name="Статус")
-#     server_response = models.TextField(blank=True, null=True, verbose_name="Ответ сервера")
-#     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name="Рассылка")
-#
-#     def __str__(self):
-#         return f"Логи рассылки {self.mailing.id}: {self.status}"
-#
-#     class Meta:
-#         verbose_name = "Логи рассылки"
-#         verbose_name_plural = "Логи рассылок"
