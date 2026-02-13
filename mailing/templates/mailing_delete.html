@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Удалить Рассылку №{{ object.id }}</h2>
+
+<div class="alert alert-warning">
+    <strong>Вы уверены, что хотите удалить Рассылку?</strong>
+    <p><em>«{{ object.message.subject }}»</em></p>
+    <p><strong>Статус:</strong> {{ object.status }}</p>
+    <p><strong>Период:</strong>
+        {{ object.start_time|date:"d.m.Y H:i" }} —
+        {{ object.end_time|date:"d.m.Y H:i" }}
+    </p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="d-grid gap-2 d-md-block">
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a href="{% url 'mailing:mailings_list' %}" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+
+{% endblock %}
