@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h5 class="card-title">Рассылка №{{ mailing.id }}</h5>
                 <p class="card-text">
-                    <strong>Статус:</strong> {{ mailing.status }}<br>
+                    <strong class="text-danger">Статус: {{ mailing.status }}</strong><br>
                     <strong>Начало:</strong> {{ mailing.start_time|date:"d.m.Y H:i" }}<br>
                     <strong>Окончание:</strong> {{ mailing.end_time|date:"d.m.Y H:i" }}<br>
                     <strong>Сообщение:</strong> {{ mailing.message.subject }}<br>
