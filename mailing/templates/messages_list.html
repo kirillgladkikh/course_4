@@ -16,8 +16,8 @@
                 <p class="card-text"><strong>Тело письма:</strong> {{ message.body }}</p>
                 <p class="card-text"><strong>Владелец:</strong> {{ message.owner }}</p>
                 <div class="mt-2">
-                    <a href="{% url 'mailing:message_delete' message.pk %}" class="btn btn-sm btn-outline-primary">Изменить Сообщение (Письмо)</a>
-                    <a href="{% url 'mailing:message_update' message.pk %}" class="btn btn-sm btn-outline-danger">Удалить Сообщение (Письмо)</a>
+                    <a href="{% url 'mailing:message_update' message.pk %}" class="btn btn-sm btn-outline-primary">Изменить Сообщение (Письмо)</a>
+                    <a href="{% url 'mailing:message_delete' message.pk %}" class="btn btn-sm btn-outline-danger">Удалить Сообщение (Письмо)</a>
                 </div>
             </div>
         </div>
