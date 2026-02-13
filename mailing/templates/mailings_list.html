@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Управление Рассылками</h2>
+<a href="{% url 'mailing:mailing_create' %}" class="btn btn-primary mb-3">Создать Рассылку</a>
+
+<p>Всего Рассылок: {{ mailings|length }}</p>
+
+{% if mailings %}
+<div class="row">
+    {% for mailing in mailings %}
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Рассылка №{{ mailing.id }}</h5>
+                <p class="card-text">
+                    <strong>Статус:</strong> {{ mailing.status }}<br>
+                    <strong>Начало:</strong> {{ mailing.start_time|date:"d.m.Y H:i" }}<br>
+                    <strong>Окончание:</strong> {{ mailing.end_time|date:"d.m.Y H:i" }}<br>
+                    <strong>Сообщение:</strong> {{ mailing.message.subject }}<br>
+                    <strong>Получателей:</strong> {{ mailing.clients.count }}
+                </p>
+                <div class="mt-2">
+                    <a href="{% url 'mailing:mailing_update' mailing.pk %}"
+                       class="btn btn-sm btn-outline-primary">Изменить</a>
+                    <a href="{% url 'mailing:mailing_delete' mailing.pk %}"
+                       class="btn btn-sm btn-outline-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    Пока нет Рассылок. <a href="{% url 'mailing:mailing_create' %}">Создайте первую Рассылку</a>.
+</div>
+{% endif %}
+
+{% endblock %}
