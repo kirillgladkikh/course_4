@@ -17,6 +17,20 @@ class Client(models.Model):
         verbose_name_plural = "Клиенты"
 
 
+# Модель "Сообщение (письмо)"
+class Message(models.Model):
+    subject = models.CharField(max_length=200, verbose_name="Тема письма")
+    body = models.TextField(verbose_name="Тело письма")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="messages")
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = "Сообщение"
+        verbose_name_plural = "Сообщения"
+
+
 # # Модель "Рассылка"
 # class Mailing(models.Model):
 #     STARTED = "Создана"
@@ -64,20 +78,7 @@ class Client(models.Model):
 #         verbose_name_plural = "Рассылки"
 #
 #
-# # Модель "Сообщение (письмо)"
-# class Message(models.Model):
-#     subject = models.CharField(max_length=200, verbose_name="Тема письма")
-#     body = models.TextField(verbose_name="Тело письма")
-#     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="messages")
-#
-#     def __str__(self):
-#         return self.subject
-#
-#     class Meta:
-#         verbose_name = "Сообщение"
-#         verbose_name_plural = "Сообщения"
-#
-#
+
 # # Модель "Логи (Попытки рассылки)"
 # class Log(models.Model):
 #     SUCCESS = "Успешно"
