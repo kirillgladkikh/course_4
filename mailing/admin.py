@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Message  # , Mailing, Log
+from .models import Client, Message, Mailing  # , Log
 
 
 @admin.register(Client)
@@ -15,12 +15,12 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ["owner"]
 
 
-# @admin.register(Mailing)
-# class MailingAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'start_datetime', 'status', 'owner']
-#     list_filter = ['status', 'owner']
-#     date_hierarchy = 'start_datetime'
-#
+@admin.register(Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    list_display = ['id', 'start_datetime', 'status', 'owner']
+    list_filter = ['status', 'owner']
+    date_hierarchy = 'start_datetime'
+
 
 # @admin.register(Log)
 # class LogAdmin(admin.ModelAdmin):
