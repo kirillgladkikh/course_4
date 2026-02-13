@@ -143,14 +143,6 @@ class MailingDeleteView(DeleteView):
 
 
 # Попытки рассылки (Log)
-# from django.views.generic import View
-# from django.http import JsonResponse
-# from django.shortcuts import get_object_or_404
-# from django.contrib import messages
-
-# from django.views.generic import ListView
-# from .models import Mailing
-
 class MailingSendListView(ListView):
     model = Mailing
     template_name = "mailing_send.html"
