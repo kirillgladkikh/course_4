@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 # Модель "Клиент (USERS)"
@@ -29,6 +30,64 @@ class Message(models.Model):
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
+
+
+# Модель "Рассылка"
+class Mailing(models.Model):
+    # Статус рассылки (вычисляется динамически)
+    STATUS_CREATED = 'Создана'
+    STATUS_RUNNING = 'Запущена'
+    STATUS_COMPLETED = 'Завершена'
+
+    STATUS_CHOICES = [
+        (STATUS_CREATED, STATUS_CREATED),
+        (STATUS_RUNNING, STATUS_RUNNING),
+        (STATUS_COMPLETED, STATUS_COMPLETED),
+    ]
+
+    start_time = models.DateTimeField(verbose_name="Дата и время начала отправки")
+    end_time = models.DateTimeField(verbose_name="Дата и время окончания отправки")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_CREATED,
+        verbose_name="Статус"
+    )
+    message = models.ForeignKey(
+        'Message',
+        on_delete=models.CASCADE,
+        verbose_name="Сообщение"
+    )
+    clients = models.ManyToManyField('Client', verbose_name="Получатели")
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Владелец",
+        related_name="mailings"
+    )
+
+    def __str__(self):
+        return f"Рассылка {self.id}: {self.status}"
+
+    class Meta:
+        verbose_name = "Рассылка"
+        verbose_name_plural = "Рассылки"
+
+    def update_status(self):
+        """Вычисляет и обновляет статус рассылки на основе текущего времени."""
+        now = timezone.now()
+
+        if now < self.start_time:
+            new_status = self.STATUS_CREATED
+        elif self.start_time <= now <= self.end_time:
+            new_status = self.STATUS_RUNNING
+        else:
+            new_status = self.STATUS_COMPLETED
+
+        # Если статус изменился — сохраняем в БД
+        if self.status != new_status:
+            self.status = new_status
+            self.save(update_fields=['status'])
 
 
 # # Модель "Рассылка"
