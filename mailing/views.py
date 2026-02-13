@@ -1,12 +1,9 @@
 from django.views.generic import View, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Client, Message, Mailing, Log
+from .models import Client, Message, Mailing
 from .forms import ClientForm, MessageForm, MailingForm
-
-# Попытки рассылки (Log)
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 
 # class HomeView(TemplateView):
@@ -145,11 +142,10 @@ class MailingDeleteView(DeleteView):
 # Попытки рассылки (Log)
 class MailingSendListView(ListView):
     model = Mailing
-    template_name = "mailing_send.html"
+    template_name = "mailing_send_list.html"  # ← обратите внимание на имя шаблона!
     context_object_name = "mailings"
 
     def get_queryset(self):
-        # Пересчитываем статус для каждой рассылки перед отображением
         qs = super().get_queryset()
         for mailing in qs:
             mailing.update_status()
@@ -157,24 +153,20 @@ class MailingSendListView(ListView):
 
 
 class SendMailingView(View):
+    def get(self, request, pk):
+        # Получаем конкретную рассылку для подтверждения
+        mailing = get_object_or_404(Mailing, pk=pk)
+        mailing.update_status()  # обновляем статус перед показом
+        return render(request, 'mailing_send.html', {'mailing': mailing})
+
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
         try:
             mailing.send_mailing()
+            mailing.status = 'running'
+            mailing.save()
             messages.success(request, "Рассылка запущена!")
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Рассылка запущена'
-            })
-        except ValueError as e:
-            messages.error(request, str(e))
-            return JsonResponse({
-                'status': 'error',
-                'message': str(e)
-            })
+            return redirect('mailing:mailing_send_list')  # возвращаемся к списку
         except Exception as e:
             messages.error(request, f"Ошибка при отправке: {str(e)}")
-            return JsonResponse({
-                'status': 'error',
-                'message': f"Ошибка при отправке: {str(e)}"
-            })
+            return render(request, 'mailing_send.html', {'mailing': mailing, 'error': str(e)})
