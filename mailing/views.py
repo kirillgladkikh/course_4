@@ -102,7 +102,7 @@ class MailingListView(ListView):
 class MailingCreateView(CreateView):
     model = Mailing
     form_class = MailingForm
-    template_name = 'mailing_create.html'
+    template_name = 'mailing_form.html'
     success_url = reverse_lazy('mailing:mailings_list')
 
 
@@ -113,7 +113,7 @@ class MailingCreateView(CreateView):
 class MailingUpdateView(UpdateView):
     model = Mailing
     form_class = MailingForm
-    template_name = 'mailing_update.html'
+    template_name = 'mailing_form.html'
     success_url = reverse_lazy('mailing:mailings_list')
 
     def get_object(self, queryset=None):
