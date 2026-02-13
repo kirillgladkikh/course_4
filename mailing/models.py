@@ -34,33 +34,6 @@ class Message(models.Model):
         verbose_name_plural = "Сообщения"
 
 
-# Модель "Попытки рассылки (Логи)"
-class Log(models.Model):
-    SUCCESS = "Успешно"
-    ERROR = "Ошибка"
-    STATUS_CHOICES = [
-        (SUCCESS, SUCCESS),
-        (ERROR, ERROR),
-    ]
-
-    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name='logs')
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    attempt_time = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время попытки")
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        verbose_name="Статус"
-    )
-    server_response = models.TextField(blank=True, null=True, verbose_name="Ответ почтового сервера")
-
-    def __str__(self):
-        return f"Лог {self.id}: {self.status} для {self.client.full_name}"
-
-    class Meta:
-        verbose_name = "Попытка рассылки"
-        verbose_name_plural = "Попытки рассылок"
-
-
 # Модель "Рассылка"
 class Mailing(models.Model):
     # Статус рассылки (вычисляется динамически)
@@ -145,6 +118,32 @@ class Mailing(models.Model):
         self.status = self.STATUS_RUNNING
         self.save(update_fields=['status'])
 
+
+# Модель "Попытки рассылки (Логи)"
+class Log(models.Model):
+    SUCCESS = "Успешно"
+    ERROR = "Ошибка"
+    STATUS_CHOICES = [
+        (SUCCESS, SUCCESS),
+        (ERROR, ERROR),
+    ]
+
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name='logs')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    attempt_time = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время попытки")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        verbose_name="Статус"
+    )
+    server_response = models.TextField(blank=True, null=True, verbose_name="Ответ почтового сервера")
+
+    def __str__(self):
+        return f"Лог {self.id}: {self.status} для {self.client.full_name}"
+
+    class Meta:
+        verbose_name = "Попытка рассылки"
+        verbose_name_plural = "Попытки рассылок"
 
 
 # # Модель "Логи (Попытки рассылки)"
