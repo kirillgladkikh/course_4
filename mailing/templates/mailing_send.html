@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Ручная отправка Рассылок</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID рассылки</th>
+            <th>Начало отправки</th>
+            <th>Окончание отправки</th>
+            <th>Тема сообщения</th>
+            <th>Статус</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mailing in mailings %}
+        <tr>
+            <td>{{ mailing.id }}</td>
+            <td>{{ mailing.start_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ mailing.end_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ mailing.message.subject }}</td>
+            <td>{{ mailing.status }}</td>
+            <td>
+                <form action="{% url 'mailing:mailing_send' mailing.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        Отправить
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
