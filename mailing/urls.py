@@ -13,6 +13,7 @@ from mailing.views import (
     MailingCreateView,
     MailingUpdateView,
     MailingDeleteView,
+    MailingSendListView,
     SendMailingView,
 )
 from mailing.apps import MailingConfig
@@ -37,5 +38,6 @@ urlpatterns = [
     path("mailings/update/<int:pk>/", MailingUpdateView.as_view(), name="mailing_update"),
     path("mailings/delete/<int:pk>/", MailingDeleteView.as_view(), name="mailing_delete"),
     # Рассылки - ОТПРАВКА
+    path("mailings/send/", MailingSendListView.as_view(), name="mailing_send_list"),
     path("mailings/send/<int:pk>/", SendMailingView.as_view(), name="mailing_send"),
 ]
