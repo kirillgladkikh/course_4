@@ -1,8 +1,8 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Client  # , Mailing, Message, Log
-from .forms import ClientForm  # , MailingForm, MessageForm
+from .models import Client, Message  # , Mailing, Log
+from .forms import ClientForm, MessageForm  # , MailingForm
 
 # class HomeView(TemplateView):
 #     template_name = 'home_view.html'
