@@ -35,9 +35,9 @@ class Message(models.Model):
 # Модель "Рассылка"
 class Mailing(models.Model):
     # Статус рассылки (вычисляется динамически)
-    STATUS_CREATED = 'Создана'
-    STATUS_RUNNING = 'Запущена'
-    STATUS_COMPLETED = 'Завершена'
+    STATUS_CREATED = "Создана"
+    STATUS_RUNNING = "Запущена"
+    STATUS_COMPLETED = "Завершена"
 
     STATUS_CHOICES = [
         (STATUS_CREATED, STATUS_CREATED),
@@ -47,24 +47,10 @@ class Mailing(models.Model):
 
     start_time = models.DateTimeField(verbose_name="Дата и время начала отправки")
     end_time = models.DateTimeField(verbose_name="Дата и время окончания отправки")
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default=STATUS_CREATED,
-        verbose_name="Статус"
-    )
-    message = models.ForeignKey(
-        'Message',
-        on_delete=models.CASCADE,
-        verbose_name="Сообщение"
-    )
-    clients = models.ManyToManyField('Client', verbose_name="Получатели")
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name="Владелец",
-        related_name="mailings"
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED, verbose_name="Статус")
+    message = models.ForeignKey("Message", on_delete=models.CASCADE, verbose_name="Сообщение")
+    clients = models.ManyToManyField("Client", verbose_name="Получатели")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="mailings")
 
     def __str__(self):
         return f"Рассылка {self.id}: {self.status}"
@@ -87,56 +73,8 @@ class Mailing(models.Model):
         # Если статус изменился — сохраняем в БД
         if self.status != new_status:
             self.status = new_status
-            self.save(update_fields=['status'])
+            self.save(update_fields=["status"])
 
-
-# # Модель "Рассылка"
-# class Mailing(models.Model):
-#     STARTED = "Создана"
-#     RUNNING = "Запущена"
-#     COMPLETED = "Завершена"
-#     STATUS_CHOICES = [
-#         (STARTED, "Создана"),
-#         (RUNNING, "Запущена"),
-#         (COMPLETED, "Завершена"),
-#     ]
-#
-#     DAILY = "Ежедневная"
-#     WEEKLY = "Раз в неделю"
-#     MONTHLY = "Раз в месяц"
-#     PERIOD_CHOICES = [
-#         (DAILY, "Ежедневная"),
-#         (WEEKLY, "Раз в неделю"),
-#         (MONTHLY, "Раз в месяц"),
-#     ]
-#
-#     start_datetime = models.DateTimeField(verbose_name="Дата и время старта")
-#     end_datetime = models.DateTimeField(verbose_name="Дата и время окончания")
-#     period = models.CharField(
-#         max_length=20,
-#         choices=PERIOD_CHOICES,
-#         blank=True,
-#         null=True,
-#         verbose_name="Период"
-#     )
-#     status = models.CharField(
-#         max_length=20,
-#         choices=STATUS_CHOICES,
-#         default=STARTED,
-#         verbose_name="Статус"
-#     )
-#     message = models.ForeignKey("Message", on_delete=models.CASCADE, verbose_name="Сообщение")
-#     clients = models.ManyToManyField(Client, verbose_name="Клиенты")
-#     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="mailings")
-#
-#     def __str__(self):
-#         return f"Рассылка {self.id}: {self.status}"
-#
-#     class Meta:
-#         verbose_name = "Рассылка"
-#         verbose_name_plural = "Рассылки"
-#
-#
 
 # # Модель "Логи (Попытки рассылки)"
 # class Log(models.Model):

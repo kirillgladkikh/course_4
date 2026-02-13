@@ -96,25 +96,26 @@ class MessageDeleteView(DeleteView):
 # Рассылки (Mailing)
 class MailingListView(ListView):
     model = Mailing
-    template_name = 'mailings_list.html'
-    context_object_name = 'mailings'
+    template_name = "mailings_list.html"
+    context_object_name = "mailings"
+
 
 class MailingCreateView(CreateView):
     model = Mailing
     form_class = MailingForm
-    template_name = 'mailing_form.html'
-    success_url = reverse_lazy('mailing:mailings_list')
-
+    template_name = "mailing_form.html"
+    success_url = reverse_lazy("mailing:mailings_list")
 
     def form_valid(self, form):
-        messages.success(self.request, 'Рассылка создана!')
+        messages.success(self.request, "Рассылка создана!")
         return super().form_valid(form)
+
 
 class MailingUpdateView(UpdateView):
     model = Mailing
     form_class = MailingForm
-    template_name = 'mailing_form.html'
-    success_url = reverse_lazy('mailing:mailings_list')
+    template_name = "mailing_form.html"
+    success_url = reverse_lazy("mailing:mailings_list")
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -122,53 +123,15 @@ class MailingUpdateView(UpdateView):
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, 'Рассылка обновлена!')
+        messages.success(self.request, "Рассылка обновлена!")
         return super().form_valid(form)
+
 
 class MailingDeleteView(DeleteView):
     model = Mailing
-    template_name = 'mailing_delete.html'
-    success_url = reverse_lazy('mailing:mailings_list')
+    template_name = "mailing_delete.html"
+    success_url = reverse_lazy("mailing:mailings_list")
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, 'Рассылка удалена!')
+        messages.success(request, "Рассылка удалена!")
         return super().delete(request, *args, **kwargs)
-
-
-# # Рассылки (Mailing)
-# class MailingListView(ListView):
-#     model = Mailing
-#     template_name = 'mailings_list.html'
-#     context_object_name = 'mailings'
-#
-#
-# class MailingCreateView(CreateView):
-#     model = Mailing
-#     form_class = MailingForm
-#     template_name = 'mailing_form.html'-------------
-#     success_url = reverse_lazy('mailing:mailing_list')--------------
-#
-#     def form_valid(self, form):
-#         messages.success(self.request, 'Рассылка создана!')
-#         return super().form_valid(form)
-#
-#
-# class MailingUpdateView(UpdateView):
-#     model = Mailing
-#     form_class = MailingForm
-#     template_name = 'mailing_form.html'-------------
-#     success_url = reverse_lazy('mailing:mailing_list')--------------
-#
-#     def form_valid(self, form):
-#         messages.success(self.request, 'Рассылка обновлена!')
-#         return super().form_valid(form)
-#
-#
-# class MailingDeleteView(DeleteView):
-#     model = Mailing
-#     template_name = "mailing_delete.html"---------------
-#     success_url = reverse_lazy('mailing:mailings_list')--------------
-#
-#     def delete(self, request, *args, **kwargs):
-#         messages.success(request, 'Рассылка удалена!')
-#         return super().delete(request, *args, **kwargs)
