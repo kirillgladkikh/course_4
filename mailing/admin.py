@@ -22,8 +22,13 @@ class MailingAdmin(admin.ModelAdmin):
     date_hierarchy = "start_time"
 
 
-# @admin.register(Log)
-# class LogAdmin(admin.ModelAdmin):
-#     list_display = ['datetime', 'status', 'mailing']
-#     list_filter = ['status', 'datetime']
-#     date_hierarchy = 'datetime'
+@admin.register(Log)
+class LogAdmin(admin.ModelAdmin):
+    list_display = ["mailing", "client", "attempt_time", "status"]
+    list_filter = ["status", "attempt_time", "mailing"]
+    search_fields = ["client__full_name", "mailing__id"]
+    date_hierarchy = "attempt_time"
+    readonly_fields = ["attempt_time", "server_response"]
+
+    def has_add_permission(self, request):
+        return False  # Логи создаются автоматически — ручное добавление не нужно
