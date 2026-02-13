@@ -1,7 +1,7 @@
 from django.views.generic import View, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Client, Message, Mailing
+from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -139,7 +139,7 @@ class MailingDeleteView(DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-# Попытки рассылки (Log)
+# Попытки рассылки
 class MailingSendListView(ListView):
     model = Mailing
     template_name = "mailing_send_list.html"  # ← обратите внимание на имя шаблона!
@@ -170,3 +170,14 @@ class SendMailingView(View):
         except Exception as e:
             messages.error(request, f"Ошибка при отправке: {str(e)}")
             return render(request, 'mailing_send.html', {'mailing': mailing, 'error': str(e)})
+
+
+# Попытки рассылки (Log)
+class LogListView(ListView):
+    model = Log
+    template_name = "mailing_log.html"
+    context_object_name = "logs"
+    ordering = ['-attempt_time']  # сортировка по времени (новые сверху)
+
+    def get_queryset(self):
+        return Log.objects.select_related('mailing', 'client').all()
