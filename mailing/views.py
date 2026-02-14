@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 
 
 # Клиенты (Client)
