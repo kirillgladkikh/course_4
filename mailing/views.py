@@ -5,6 +5,8 @@ from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.views.decorators.cache import cache_page, cache_control
+from django.utils.decorators import method_decorator
 
 
 # Клиенты (Client)
@@ -12,6 +14,10 @@ class ClientListView(ListView):
     model = Client
     template_name = "clients_list.html"
     context_object_name = "clients"
+
+    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class ClientCreateView(CreateView):
@@ -52,6 +58,10 @@ class MessageListView(ListView):
     template_name = "messages_list.html"
     context_object_name = "messages"
 
+    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class MessageCreateView(CreateView):
     model = Message
@@ -90,6 +100,13 @@ class MailingListView(ListView):
     model = Mailing
     template_name = "mailings_list.html"
     context_object_name = "mailings"
+
+    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        return Mailing.objects.select_related('message', 'owner').order_by('-start_time')
 
 
 class MailingCreateView(CreateView):
@@ -132,8 +149,12 @@ class MailingDeleteView(DeleteView):
 # Попытки рассылки
 class MailingSendListView(ListView):
     model = Mailing
-    template_name = "mailing_send_list.html"  # ← обратите внимание на имя шаблона!
+    template_name = "mailing_send_list.html"
     context_object_name = "mailings"
+
+    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -147,7 +168,9 @@ class SendMailingView(View):
         # Получаем конкретную рассылку для подтверждения
         mailing = get_object_or_404(Mailing, pk=pk)
         mailing.update_status()  # обновляем статус перед показом
-        return render(request, "mailing_send.html", {"mailing": mailing})
+        response = render(request, "mailing_send.html", {"mailing": mailing})
+        response['Cache-Control'] = 'max-age=300, public'  # кешируем на 5 минут
+        return response
 
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
@@ -168,6 +191,10 @@ class LogListView(ListView):
     template_name = "mailing_log.html"
     context_object_name = "logs"
     ordering = ["-attempt_time"]  # сортировка по времени (новые сверху)
+
+    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         return Log.objects.select_related("mailing", "client").order_by("-attempt_time")
@@ -197,3 +224,7 @@ class HomeView(TemplateView):
         context['total_clients'] = Client.objects.count()
 
         return context
+
+    @method_decorator(cache_control(max_age=3600, public=True))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

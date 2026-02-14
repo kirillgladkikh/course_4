@@ -172,10 +172,18 @@ EMAIL_USE_SSL = True
 #
 # SERVER_EMAIL = EMAIL_HOST_USER
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-#
+
+# КЕШ
 CACHE_ENABLED = True
 
 if CACHE_ENABLED:
     CACHES = {
-        "default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": "redis://localhost:6379"}
-    }
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://localhost:6379",
+            "TIMEOUT": 300,  # 5 минут — время жизни кеша по умолчанию
+            }
+        }
+
+# Для статических файлов — добавляем TTL
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
