@@ -1,6 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from mailing.views import (
+    HomeView,
     ClientListView,
     ClientCreateView,
     ClientUpdateView,
@@ -22,7 +23,9 @@ from mailing.apps import MailingConfig
 app_name = MailingConfig.name
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="home_view.html"), name="home_view"),
+    # Главная страница
+    path("", HomeView.as_view(), name="home_view"),
+    # path("", TemplateView.as_view(template_name="home_view.html"), name="home_view"),
     # Клиенты
     path("clients/", ClientListView.as_view(), name="clients_list"),
     path("clients/create/", ClientCreateView.as_view(), name="client_create"),
