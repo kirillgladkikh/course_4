@@ -28,24 +28,24 @@
 
                 {% if user.is_authenticated %}
                     <div style="background: yellow; padding: 10px;">
-                        DEBUG: Пользователь mailing аутентифицирован как: {{ user.username }} (ID: {{ user.id }})
+                        DEBUG: Пользователь user аутентифицирован как: {{ user.username }} (ID: {{ user.id }})
                         {% if user.is_anonymous %}
                             (но при этом anonymous!)
                         {% endif %}
                     </div>
                 {% else %}
                     <div style="background: lightblue; padding: 10px;">
-                        DEBUG: Пользователь mailing НЕ аутентифицирован
+                        DEBUG: Пользователь user НЕ аутентифицирован
                     </div>
                 {% endif %}
 
                 {% if user.is_authenticated and not user.is_anonymous %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:logout' %}">Выход mailing "{% url 'users:logout' %}"</a>  <!--Выход mailing-->
+                    <a class="nav-link" href="{% url 'users:logout' %}">Выход user "{% url 'users:logout' %}"</a>  <!--Выход users-->
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:login' %}">Вход mailing "{% url 'users:login' %}"</a>  <!--Вход mailing-->
+                    <a class="nav-link" href="{% url 'users:login' %}">Вход user "{% url 'users:login' %}"</a>  <!--Вход users-->
                 </li>
                 {% endif %}
             </ul>

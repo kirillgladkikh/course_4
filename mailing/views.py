@@ -106,7 +106,7 @@ class MailingListView(ListView):
         return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
-        return Mailing.objects.select_related('message', 'owner').order_by('-start_time')
+        return Mailing.objects.select_related("message", "owner").order_by("-start_time")
 
 
 class MailingCreateView(CreateView):
@@ -169,7 +169,7 @@ class SendMailingView(View):
         mailing = get_object_or_404(Mailing, pk=pk)
         mailing.update_status()  # обновляем статус перед показом
         response = render(request, "mailing_send.html", {"mailing": mailing})
-        response['Cache-Control'] = 'max-age=300, public'  # кешируем на 5 минут
+        response["Cache-Control"] = "max-age=300, public"  # кешируем на 5 минут
         return response
 
     def post(self, request, pk):
@@ -202,26 +202,26 @@ class LogListView(ListView):
 
 # Главная страница
 class HomeView(TemplateView):
-    template_name = 'home_view.html'
+    template_name = "home_view.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         now = timezone.now()  # Получаем текущую дату и время
 
         # 1. Общее количество всех созданных рассылок
-        context['total_mailings'] = Mailing.objects.count()
+        context["total_mailings"] = Mailing.objects.count()
 
         # 2. Количество активных рассылок
         # Активная рассылка: статус = 'Запущена' И текущее время в интервале [start_time, end_time]
         active_mailings = Mailing.objects.filter(
             status=Mailing.STATUS_RUNNING,  # статус "Запущена"
-            start_time__lte=now,           # текущее время ≥ start_time
-            end_time__gte=now              # текущее время ≤ end_time
+            start_time__lte=now,  # текущее время ≥ start_time
+            end_time__gte=now,  # текущее время ≤ end_time
         ).count()
-        context['active_mailings'] = active_mailings
+        context["active_mailings"] = active_mailings
 
         # 3. Количество уникальных получателей (клиентов)
-        context['total_clients'] = Client.objects.count()
+        context["total_clients"] = Client.objects.count()
 
         return context
 

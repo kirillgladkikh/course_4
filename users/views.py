@@ -4,5 +4,6 @@ from django.shortcuts import render
 # TEST
 from django.http import HttpResponse
 
+
 def index(request):
     return HttpResponse("Привет из приложения users!")

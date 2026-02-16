@@ -151,15 +151,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ВАЖНО:
 # НАДО СНЯТЬ КОММЕНТ НА AUTH_USER_MODEL, ЕСЛИ НАДО ДЕЛАТЬ НЕ СТАНДАРТНУЮ АУТЕНТИФИКАЦИЮ
 # НАПРИМЕР: КОГДА ХОЧЕШЬ ЧЕРЕЗ ЭЛ.ПОЧТУ
-# AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"
 
 # ВАЖНО:
 # СНЯТЬ КОММЕНТЫ НИЖЕ ПО МЕРЕ НАПОЛНЕНИЯ ПРОЕКТА ШАГ ЗА ШАГОМ !!!
 # ИНАЧЕ СЕРВЕР БУДЕТ РУГАТЬСЯ Т К В ПРОЕКТЕ НЕТ СООТВЕСТВУЮЩЕГО КОДА
-# LOGIN_REDIRECT_URL = "/"
-# LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 #
-# # LOGIN_REDIRECT_URL = 'library:books_list'
 # LOGIN_URL = "users:login"
 #
 EMAIL_HOST = "smtp.yandex.ru"
@@ -172,17 +171,17 @@ EMAIL_USE_SSL = True
 # SERVER_EMAIL = EMAIL_HOST_USER
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# КЕШ
-CACHE_ENABLED = True
-
-if CACHE_ENABLED:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": "redis://localhost:6379",
-            "TIMEOUT": 300,  # 5 минут — время жизни кеша по умолчанию
-            }
-        }
-
-# Для статических файлов — добавляем TTL
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+# # КЕШ
+# CACHE_ENABLED = True
+#
+# if CACHE_ENABLED:
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#             "LOCATION": "redis://localhost:6379",
+#             "TIMEOUT": 300,  # 5 минут — время жизни кеша по умолчанию
+#         }
+#     }
+#
+# # # Для статических файлов — добавляем TTL
+# # STATICFILES_STORAGE = "django.contrib.staticfiles.storage.CachedStaticFilesStorage"

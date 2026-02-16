@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
@@ -10,7 +11,7 @@ class Client(models.Model):
     email = models.EmailField(verbose_name="Контактный email")
     full_name = models.CharField(max_length=100, verbose_name="ФИО")
     comment = models.CharField(max_length=255, verbose_name="Комментарий", blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="clients")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец", related_name="clients")
 
     def __str__(self):
         return self.full_name
@@ -24,7 +25,7 @@ class Client(models.Model):
 class Message(models.Model):
     subject = models.CharField(max_length=200, verbose_name="Тема письма")
     body = models.TextField(verbose_name="Тело письма")
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="messages")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец", related_name="messages")
 
     def __str__(self):
         return self.subject
@@ -52,7 +53,7 @@ class Mailing(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED, verbose_name="Статус")
     message = models.ForeignKey("Message", on_delete=models.CASCADE, verbose_name="Сообщение")
     clients = models.ManyToManyField("Client", verbose_name="Получатели")
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец", related_name="mailings")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец", related_name="mailings")
 
     def __str__(self):
         return f"Рассылка {self.id}: {self.status}"
