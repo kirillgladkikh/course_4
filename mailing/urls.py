@@ -1,5 +1,5 @@
 from django.urls import path
-from django.views.decorators.cache import cache_page
+# from django.views.decorators.cache import cache_page
 from mailing.views import (
     HomeView,
     ClientListView,
@@ -44,7 +44,7 @@ urlpatterns = [
     path("mailings/send/", MailingSendListView.as_view(), name="mailing_send_list"),
     path("mailings/send/<int:pk>/", SendMailingView.as_view(), name="mailing_send"),
     # Рассылки - ЛОГ
-    path("logs/", cache_page(60 * 15)(LogListView.as_view()), name="mailing_log"),
+    path("logs/", LogListView.as_view(), name="mailing_log"),
 ]
 
 # urlpatterns = [

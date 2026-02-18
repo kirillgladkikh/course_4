@@ -169,7 +169,7 @@ class SendMailingView(View):
         mailing = get_object_or_404(Mailing, pk=pk)
         mailing.update_status()  # обновляем статус перед показом
         response = render(request, "mailing_send.html", {"mailing": mailing})
-        response["Cache-Control"] = "max-age=300, public"  # кешируем на 5 минут
+        # response["Cache-Control"] = "max-age=300, public"  # кешируем на 5 минут
         return response
 
     def post(self, request, pk):
