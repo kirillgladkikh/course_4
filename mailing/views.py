@@ -58,9 +58,9 @@ class MessageListView(ListView):
     template_name = "messages_list.html"
     context_object_name = "messages"
 
-    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class MessageCreateView(CreateView):
@@ -101,9 +101,9 @@ class MailingListView(ListView):
     template_name = "mailings_list.html"
     context_object_name = "mailings"
 
-    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         return Mailing.objects.select_related("message", "owner").order_by("-start_time")
@@ -152,9 +152,9 @@ class MailingSendListView(ListView):
     template_name = "mailing_send_list.html"
     context_object_name = "mailings"
 
-    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -192,9 +192,9 @@ class LogListView(ListView):
     context_object_name = "logs"
     ordering = ["-attempt_time"]  # сортировка по времени (новые сверху)
 
-    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         return Log.objects.select_related("mailing", "client").order_by("-attempt_time")
