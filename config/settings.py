@@ -42,15 +42,17 @@ INSTALLED_APPS = [
     # ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
     # - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
     # (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
+    "users",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django_extensions',
     # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "mailing",
-    "users",
+
 ]
 
 MIDDLEWARE = [

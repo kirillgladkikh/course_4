@@ -13,6 +13,10 @@ from config.settings import EMAIL_HOST_USER
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, UpdateView
+
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -61,3 +65,17 @@ def email_verification(request, token):
     user.is_active = True
     user.save()
     return redirect(reverse("users:login"))
+
+
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
+class UserListView(ListView):
+    model = User
+    template_name = 'users_list.html'
+    context_object_name = 'users'
+
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
+class UserUpdateView(UpdateView):
+    model = User
+    fields = ['is_active', 'is_staff']
+    template_name = 'user_update.html'
+    success_url = reverse_lazy('users:users_list')

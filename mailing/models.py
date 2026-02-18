@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 
-# Модель "Клиент (USERS)"
+# Модель "Клиент (не USER)"
 class Client(models.Model):
     email = models.EmailField(verbose_name="Контактный email")
     full_name = models.CharField(max_length=100, verbose_name="ФИО")

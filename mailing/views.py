@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.views.generic import TemplateView, View, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -8,9 +9,30 @@ from django.utils import timezone
 # from django.views.decorators.cache import cache_page, cache_control
 # from django.utils.decorators import method_decorator
 
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
+from users.models import User
+
+class UserOwnershipMixin:
+    """Миксин для проверки принадлежности объекта текущему пользователю"""
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_superuser:
+            qs = qs.filter(owner=self.request.user)
+        return qs
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            obj = self.get_object()
+            if obj.owner != request.user:
+                from django.http import HttpResponseForbidden
+                return HttpResponseForbidden("У вас нет прав для доступа к этому объекту")
+        return super().dispatch(request, *args, **kwargs)
+
 
 # Клиенты (Client)
-class ClientListView(ListView):
+class ClientListView(UserOwnershipMixin, ListView):
     model = Client
     template_name = "clients_list.html"
     context_object_name = "clients"
@@ -27,8 +49,12 @@ class ClientCreateView(CreateView):
     success_url = reverse_lazy("mailing:clients_list")
 
     def form_valid(self, form):
-        messages.success(self.request, "Клиент создан!")
+        form.instance.owner = self.request.user
         return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     messages.success(self.request, "Клиент создан!")
+    #     return super().form_valid(form)
 
 
 class ClientUpdateView(UpdateView):
@@ -53,7 +79,7 @@ class ClientDeleteView(DeleteView):
 
 
 # Сообщения (Message)
-class MessageListView(ListView):
+class MessageListView(UserOwnershipMixin, ListView):
     model = Message
     template_name = "messages_list.html"
     context_object_name = "messages"
@@ -70,8 +96,12 @@ class MessageCreateView(CreateView):
     success_url = reverse_lazy("mailing:messages_list")
 
     def form_valid(self, form):
-        messages.success(self.request, "Сообщение создано!")
+        form.instance.owner = self.request.user
         return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     messages.success(self.request, "Сообщение создано!")
+    #     return super().form_valid(form)
 
 
 class MessageUpdateView(UpdateView):
@@ -96,7 +126,7 @@ class MessageDeleteView(DeleteView):
 
 
 # Рассылки (Mailing)
-class MailingListView(ListView):
+class MailingListView(UserOwnershipMixin, ListView):
     model = Mailing
     template_name = "mailings_list.html"
     context_object_name = "mailings"
@@ -116,8 +146,12 @@ class MailingCreateView(CreateView):
     success_url = reverse_lazy("mailing:mailings_list")
 
     def form_valid(self, form):
-        messages.success(self.request, "Рассылка создана!")
+        form.instance.owner = self.request.user
         return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     messages.success(self.request, "Рассылка создана!")
+    #     return super().form_valid(form)
 
 
 class MailingUpdateView(UpdateView):
@@ -174,6 +208,9 @@ class SendMailingView(View):
 
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
+        mailing = get_object_or_404(Mailing, pk=pk)
+        if not request.user.is_superuser and mailing.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав для отправки этой рассылки")
         try:
             mailing.send_mailing()
             mailing.status = "running"
@@ -252,3 +289,18 @@ class HomeView(TemplateView):
     # @method_decorator(cache_control(max_age=3600, public=True))
     # def get(self, request, *args, **kwargs):
     #     return super().get(request, *args, **kwargs)
+
+
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
+class UserListView(ListView):
+    model = User
+    template_name = 'users/users_list.html'
+    context_object_name = 'users'
+    queryset = User.objects.all().order_by('email')
+
+@method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
+class UserUpdateView(UpdateView):
+    model = User
+    template_name = 'users/user_update.html'
+    fields = ['is_active', 'is_staff']
+    success_url = reverse_lazy('users:users_list')

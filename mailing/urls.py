@@ -17,6 +17,8 @@ from mailing.views import (
     MailingSendListView,
     SendMailingView,
     LogListView,
+    UserListView,
+    UserUpdateView,
 )
 from mailing.apps import MailingConfig
 
@@ -45,6 +47,9 @@ urlpatterns = [
     path("mailings/send/<int:pk>/", SendMailingView.as_view(), name="mailing_send"),
     # Рассылки - ЛОГ
     path("logs/", LogListView.as_view(), name="mailing_log"),
+    # Пользователи
+    path('users/', UserListView.as_view(), name='users_list'),
+    path('users/<int:pk>/update/', UserUpdateView.as_view(), name='user_update'),
 ]
 
 # urlpatterns = [

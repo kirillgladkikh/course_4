@@ -5,7 +5,8 @@ from users.views import custom_login
 
 from users.views import UserCreateView, email_verification
 # from users.forms import LoginForm
-from . import views
+
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 app_name = UsersConfig.name  # 'users'
 
@@ -19,4 +20,14 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout"),
     path("register/", UserCreateView.as_view(), name="register"),
     path("email-confirm/<str:token>/", email_verification, name="email-confirm"),
+    # Сброс пароля
+    path('password-reset/', PasswordResetView.as_view(template_name='users/password_reset.html',
+            email_template_name='registration/password_reset_email.html'),
+         name='password_reset'),
+    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),
+         name='password_reset_confirm'),
+    path('reset/done/', PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),
+         name='password_reset_complete'),
 ]

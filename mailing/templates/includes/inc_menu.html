@@ -26,6 +26,17 @@
                     <a class="nav-link" href="{% url 'mailing:mailing_log' %}">Лог рассылок</a>  <!--Попытки рассылок-->
                 </li>
 
+                {% if user.is_superuser %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Управление пользователями
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'users:users_list' %}">Список пользователей</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
                 {% if user.is_authenticated %}
                     <div style="background: yellow; padding: 10px;">
                         DEBUG: Пользователь mailing аутентифицирован как: {{ user.username }} (ID: {{ user.id }})
