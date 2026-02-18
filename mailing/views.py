@@ -5,8 +5,8 @@ from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from django.views.decorators.cache import cache_page, cache_control
-from django.utils.decorators import method_decorator
+# from django.views.decorators.cache import cache_page, cache_control
+# from django.utils.decorators import method_decorator
 
 
 # Клиенты (Client)
