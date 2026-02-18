@@ -4,6 +4,34 @@
 {% block content %}
 <h1>Попытки рассылок (логи)</h1>
 
+<!-- Блок статистики -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Успешных попыток</h5>
+                <p class="card-text display-6">{{ successful_attempts }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Неуспешных попыток</h5>
+                <p class="card-text display-6">{{ error_attempts }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Всего отправлено</h5>
+                <p class="card-text display-6">{{ total_messages_sent }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table class="table table-striped table-bordered">
     <thead>
         <tr>

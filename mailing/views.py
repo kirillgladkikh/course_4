@@ -192,12 +192,36 @@ class LogListView(ListView):
     context_object_name = "logs"
     ordering = ["-attempt_time"]  # сортировка по времени (новые сверху)
 
+    def get_queryset(self):
+        return Log.objects.select_related("mailing", "client").order_by("-attempt_time")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        # Все логи пользователя (через рассылки, которыми он владеет)
+        user_logs = Log.objects.filter(mailing__owner=user)
+
+        # Количество успешных попыток
+        successful_count = user_logs.filter(status=Log.SUCCESS).count()
+
+        # Количество неуспешных попыток
+        error_count = user_logs.filter(status=Log.ERROR).count()
+
+        # Общее количество отправленных сообщений (всех попыток)
+        total_sent = user_logs.count()
+
+        context.update({
+            'successful_attempts': successful_count,
+            'error_attempts': error_count,
+            'total_messages_sent': total_sent,
+        })
+
+        return context
+
     # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
     # def dispatch(self, *args, **kwargs):
     #     return super().dispatch(*args, **kwargs)
-
-    def get_queryset(self):
-        return Log.objects.select_related("mailing", "client").order_by("-attempt_time")
 
 
 # Главная страница
