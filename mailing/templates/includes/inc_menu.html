@@ -39,13 +39,16 @@
                     </div>
                 {% endif %}
 
-                {% if user.is_authenticated and not user.is_anonymous %}
+                {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:logout' %}">Выход mailing "{% url 'users:logout' %}"</a>  <!--Выход mailing-->
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-light btn-sm mt-1" type="submit">Выход user "{% url 'users:logout' %}"</button>
+                    </form>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:login' %}">Вход mailing "{% url 'users:login' %}"</a>  <!--Вход mailing-->
+                    <a class="nav-link" href="{% url 'users:login' %}">!!!!Вход mailing "{% url 'users:login' %}"</a>  <!--Вход mailing-->
                 </li>
                 {% endif %}
             </ul>

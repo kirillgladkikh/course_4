@@ -15,9 +15,9 @@ class ClientListView(ListView):
     template_name = "clients_list.html"
     context_object_name = "clients"
 
-    @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
 
 
 class ClientCreateView(CreateView):
@@ -225,6 +225,6 @@ class HomeView(TemplateView):
 
         return context
 
-    @method_decorator(cache_control(max_age=3600, public=True))
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    # @method_decorator(cache_control(max_age=3600, public=True))
+    # def get(self, request, *args, **kwargs):
+    #     return super().get(request, *args, **kwargs)

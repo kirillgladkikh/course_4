@@ -24,7 +24,7 @@ app_name = MailingConfig.name
 
 urlpatterns = [
     # Главная страница
-    path("", cache_page(60 * 15)(HomeView.as_view()), name="home_view"),
+    path("", HomeView.as_view(), name="home_view"),
     # Клиенты
     path("clients/", cache_page(60 * 15)(ClientListView.as_view()), name="clients_list"),
     path("clients/create/", cache_page(60 * 15)(ClientCreateView.as_view()), name="client_create"),
