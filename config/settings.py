@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     # ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
     # - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
     # (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
-    "users",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'django_extensions',
     # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "mailing",
-
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -70,7 +70,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

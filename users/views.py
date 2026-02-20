@@ -80,3 +80,4 @@ class UserUpdateView(UpdateView):
     template_name = 'users/user_update.html'  # важно: полный путь к шаблону
     # template_name = 'user_update.html'
     success_url = reverse_lazy('users:users_list')
+
