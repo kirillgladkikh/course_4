@@ -22,13 +22,17 @@ class UserOwnershipMixin:
             qs = qs.filter(owner=self.request.user)
         return qs
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_superuser:
-            obj = self.get_object()
-            if obj.owner != request.user:
-                from django.http import HttpResponseForbidden
-                return HttpResponseForbidden("У вас нет прав для доступа к этому объекту")
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     # Удаляем вызов get_object(), так как ListView его не имеет
+    #     if not request.user.is_superuser:
+    #         obj = self.get_object()
+    #         if obj.owner != request.user:
+    #             # Для ListView нет одного объекта — работаем с набором (queryset)
+    #             # Проверка прав выполняется в get_queryset(), поэтому здесь можно просто продолжить
+    #             # from django.http import HttpResponseForbidden
+    #             # return HttpResponseForbidden("У вас нет прав для доступа к этому объекту")
+    #             pass
+    #     return super().dispatch(request, *args, **kwargs)
 
 
 # Клиенты (Client)
@@ -49,7 +53,7 @@ class ClientCreateView(CreateView):
     success_url = reverse_lazy("mailing:clients_list")
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        form.instance.owner = self.request.user  # Автоматически устанавливаем владельца
         return super().form_valid(form)
 
     # def form_valid(self, form):
