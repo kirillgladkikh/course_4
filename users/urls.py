@@ -36,7 +36,11 @@ urlpatterns = [
          PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
          name='password_reset_done'),
     path('reset/<uidb64>/<token>/',
-         PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
+         PasswordResetConfirmView.as_view(
+             template_name='registration/password_reset_confirm.html',
+             success_url=reverse_lazy('users:password_reset_complete')  # Явно указываем пространство имён
+         ),
+         # PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
          name='password_reset_confirm'),
     path('reset/done/',
          PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
