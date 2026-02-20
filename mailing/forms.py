@@ -38,11 +38,11 @@ class ClientForm(forms.ModelForm):
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ["subject", "body", "owner"]
+        fields = ["subject", "body"]  #, "owner"]
         labels = {
             "subject": "Тема письма",
             "body": "Тело письма",
-            "owner": "Владелец (User)",
+            # "owner": "Владелец (User)",
         }
         widgets = {
             "subject": forms.TextInput(
@@ -59,7 +59,7 @@ class MessageForm(forms.ModelForm):
                     "rows": 10,
                 }
             ),
-            "owner": forms.Select(attrs={"class": "form-select"}),  # для ForeignKey лучше form-select
+            # "owner": forms.Select(attrs={"class": "form-select"}),  # для ForeignKey лучше form-select
         }
 
 
