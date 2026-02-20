@@ -2,6 +2,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from users.apps import UsersConfig
 from users.views import custom_login, UserListView, UserUpdateView
+from django.urls import reverse_lazy
 
 from users.views import UserCreateView, email_verification
 # from users.forms import LoginForm
@@ -22,9 +23,15 @@ urlpatterns = [
     path("email-confirm/<str:token>/", email_verification, name="email-confirm"),
     # Сброс пароля
     path('password-reset/',
-         PasswordResetView.as_view(template_name='registration/password_reset_form.html',
-         email_template_name='registration/password_reset_email.html'),
+         PasswordResetView.as_view(
+             template_name='registration/password_reset_form.html',
+             email_template_name='registration/password_reset_email.html',
+             success_url=reverse_lazy('users:password_reset_done')  # Явно указываем пространство имён
+         ),
          name='password_reset'),
+         # PasswordResetView.as_view(template_name='registration/password_reset_form.html',
+         # email_template_name='registration/password_reset_email.html'),
+         # name='password_reset'),
     path('password-reset/done/',
          PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
          name='password_reset_done'),
