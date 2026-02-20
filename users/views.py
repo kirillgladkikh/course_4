@@ -77,5 +77,6 @@ class UserListView(ListView):
 class UserUpdateView(UpdateView):
     model = User
     fields = ['is_active', 'is_staff']
-    template_name = 'user_update.html'
+    template_name = 'users/user_update.html'  # важно: полный путь к шаблону
+    # template_name = 'user_update.html'
     success_url = reverse_lazy('users:users_list')
