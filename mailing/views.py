@@ -6,6 +6,7 @@ from .models import Client, Message, Mailing, Log
 from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.core.exceptions import PermissionDenied
 # from django.views.decorators.cache import cache_page, cache_control
 # from django.utils.decorators import method_decorator
 
@@ -33,6 +34,46 @@ class UserOwnershipMixin:
     #             # return HttpResponseForbidden("У вас нет прав для доступа к этому объекту")
     #             pass
     #     return super().dispatch(request, *args, **kwargs)
+
+
+class FilterQuerysetMixin:
+    """
+    Миксин для фильтрации queryset поля в форме в зависимости от прав пользователя.
+    Принимает параметр `filter_field` — название поля формы для фильтрации
+    (например, 'clients').
+    Принимает параметр `model_class` — модель, для которой фильтруется queryset
+    (например, Client).
+    Принимает параметр `owner_field` — поле модели, по которому фильтруются записи
+    (например, 'owner').
+    """
+
+    filter_field = None  # название поля формы (например, 'clients')
+    model_class = None   # модель (например, Client)
+    owner_field = 'owner'  # поле связи с пользователем в модели (например, 'owner')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        field = form.fields.get(self.filter_field)
+        if field is None:
+            raise ValueError(f"Поле '{self.filter_field}' не найдено в форме")
+
+        if self.request.user.is_superuser:
+            field.queryset = self.model_class.objects.all()
+        else:
+            field.queryset = self.model_class.objects.filter(**{self.owner_field: self.request.user})
+        return form
+
+# # ЭТО РАБОЧИЙ КОД! FilterMessageQuerysetMixin
+# class FilterMessageQuerysetMixin:
+#     """Миксин для фильтрации queryset поля 'message' в форме"""
+#
+#     def get_form(self, form_class=None):
+#         form = super().get_form(form_class)
+#         if self.request.user.is_superuser:
+#             form.fields['message'].queryset = Message.objects.all()
+#         else:
+#             form.fields['message'].queryset = Message.objects.filter(owner=self.request.user)
+#         return form
 
 
 # Клиенты (Client)
@@ -143,11 +184,16 @@ class MailingListView(UserOwnershipMixin, ListView):
         return Mailing.objects.select_related("message", "owner").order_by("-start_time")
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(FilterQuerysetMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     template_name = "mailing_form.html"
     success_url = reverse_lazy("mailing:mailings_list")
+
+    # Параметры для миксина (настраиваем под свою логику)
+    filter_field = 'clients'        # название поля формы с клиентами (как в вашей форме)
+    model_class = Client            # модель Client (получатели)
+    owner_field = 'owner'           # поле в модели Client, связывающее с пользователем
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -158,20 +204,60 @@ class MailingCreateView(CreateView):
     #     return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(FilterQuerysetMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     template_name = "mailing_form.html"
     success_url = reverse_lazy("mailing:mailings_list")
 
+    # Параметры для миксина — фильтруем список клиентов
+    filter_field = 'clients'
+    model_class = Client
+    owner_field = 'owner'
+
     def get_object(self, queryset=None):
+        """
+        Получаем объект рассылки и проверяем права доступа.
+        Только владелец или суперпользователь может редактировать рассылку.
+        """
         obj = super().get_object(queryset)
-        obj.update_status()  # ← пересчёт статуса при открытии
+        if not self.request.user.is_superuser and obj.owner != self.request.user:
+            raise PermissionDenied("У вас нет прав на редактирование этой рассылки")
         return obj
 
     def form_valid(self, form):
-        messages.success(self.request, "Рассылка обновлена!")
+        """
+        Убеждаемся, что владелец рассылки не меняется при редактировании.
+        Даже если в форме есть поле owner, оно не должно быть изменено обычным пользователем.
+        """
+        if not self.request.user.is_superuser:
+            form.instance.owner = self.request.user
+        messages.success(self.request, "Рассылка успешно обновлена!")
         return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        """
+        Дополнительно фильтруем поле message (темы сообщений) как в оригинальном миксине.
+        Это можно вынести в отдельный миксин или оставить здесь для ясности.
+        """
+        form = super().get_form(form_class)
+
+        # Фильтрация тем сообщений (message)
+        if self.request.user.is_superuser:
+            form.fields['message'].queryset = Message.objects.all()
+        else:
+            form.fields['message'].queryset = Message.objects.filter(owner=self.request.user)
+
+        return form
+
+    # def get_object(self, queryset=None):
+    #     obj = super().get_object(queryset)
+    #     obj.update_status()  # ← пересчёт статуса при открытии
+    #     return obj
+    #
+    # def form_valid(self, form):
+    #     messages.success(self.request, "Рассылка обновлена!")
+    #     return super().form_valid(form)
 
 
 class MailingDeleteView(DeleteView):
