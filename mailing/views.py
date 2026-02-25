@@ -7,8 +7,7 @@ from .forms import ClientForm, MessageForm, MailingForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
-# from django.views.decorators.cache import cache_page, cache_control
-# from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
@@ -82,10 +81,6 @@ class ClientListView(UserOwnershipMixin, ListView):
     template_name = "clients_list.html"
     context_object_name = "clients"
 
-    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
-
 
 class ClientCreateView(CreateView):
     model = Client
@@ -96,10 +91,6 @@ class ClientCreateView(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user  # Автоматически устанавливаем владельца
         return super().form_valid(form)
-
-    # def form_valid(self, form):
-    #     messages.success(self.request, "Клиент создан!")
-    #     return super().form_valid(form)
 
 
 class ClientUpdateView(UpdateView):
@@ -129,10 +120,6 @@ class MessageListView(UserOwnershipMixin, ListView):
     template_name = "messages_list.html"
     context_object_name = "messages"
 
-    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
-
 
 class MessageCreateView(CreateView):
     model = Message
@@ -143,10 +130,6 @@ class MessageCreateView(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user  # Автоматически устанавливаем владельца
         return super().form_valid(form)
-
-    # def form_valid(self, form):
-    #     messages.success(self.request, "Сообщение создано!")
-    #     return super().form_valid(form)
 
 
 class MessageUpdateView(UpdateView):
@@ -176,9 +159,6 @@ class MailingListView(UserOwnershipMixin, ListView):
     template_name = "mailings_list.html"
     context_object_name = "mailings"
 
-    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         return Mailing.objects.select_related("message", "owner").order_by("-start_time")
@@ -198,10 +178,6 @@ class MailingCreateView(FilterQuerysetMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
-
-    # def form_valid(self, form):
-    #     messages.success(self.request, "Рассылка создана!")
-    #     return super().form_valid(form)
 
 
 class MailingUpdateView(FilterQuerysetMixin, UpdateView):
@@ -250,15 +226,6 @@ class MailingUpdateView(FilterQuerysetMixin, UpdateView):
 
         return form
 
-    # def get_object(self, queryset=None):
-    #     obj = super().get_object(queryset)
-    #     obj.update_status()  # ← пересчёт статуса при открытии
-    #     return obj
-    #
-    # def form_valid(self, form):
-    #     messages.success(self.request, "Рассылка обновлена!")
-    #     return super().form_valid(form)
-
 
 class MailingDeleteView(DeleteView):
     model = Mailing
@@ -275,10 +242,6 @@ class MailingSendListView(ListView):
     model = Mailing
     template_name = "mailing_send_list.html"
     context_object_name = "mailings"
-
-    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -346,10 +309,6 @@ class LogListView(ListView):
 
         return context
 
-    # @method_decorator(cache_page(60 * 15))  # кешируем на 15 минут
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
-
 
 # Главная страница
 class HomeView(TemplateView):
@@ -376,9 +335,9 @@ class HomeView(TemplateView):
 
         return context
 
-    # @method_decorator(cache_control(max_age=3600, public=True))
-    # def get(self, request, *args, **kwargs):
-    #     return super().get(request, *args, **kwargs)
+    @method_decorator(cache_control(max_age=3600, public=True))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')

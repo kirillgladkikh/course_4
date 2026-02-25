@@ -1,5 +1,5 @@
 from django.urls import path
-# from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page
 from mailing.views import (
     HomeView,
     ClientListView,
@@ -28,20 +28,20 @@ urlpatterns = [
     # Главная страница
     path("", HomeView.as_view(), name="home_view"),
     # Клиенты
-    path("clients/", ClientListView.as_view(), name="clients_list"),
-    path("clients/create/", ClientCreateView.as_view(), name="client_create"),
-    path("clients/update/<int:pk>/", ClientUpdateView.as_view(), name="client_update"),
-    path("clients/delete/<int:pk>/", ClientDeleteView.as_view(), name="client_delete"),
+    path("clients/", cache_page(60)(ClientListView.as_view()), name="clients_list"),
+    path("clients/create/", cache_page(60)(ClientCreateView.as_view()), name="client_create"),
+    path("clients/update/<int:pk>/", cache_page(60)(ClientUpdateView.as_view()), name="client_update"),
+    path("clients/delete/<int:pk>/", cache_page(60)(ClientDeleteView.as_view()), name="client_delete"),
     # Сообщения
-    path("messages/", MessageListView.as_view(), name="messages_list"),
-    path("messages/create/", MessageCreateView.as_view(), name="message_create"),
-    path("messages/update/<int:pk>/", MessageUpdateView.as_view(), name="message_update"),
-    path("messages/delete/<int:pk>/", MessageDeleteView.as_view(), name="message_delete"),
+    path("messages/", cache_page(60)(MessageListView.as_view()), name="messages_list"),
+    path("messages/create/", cache_page(60)(MessageCreateView.as_view()), name="message_create"),
+    path("messages/update/<int:pk>/", cache_page(60)(MessageUpdateView.as_view()), name="message_update"),
+    path("messages/delete/<int:pk>/", cache_page(60)(MessageDeleteView.as_view()), name="message_delete"),
     # Рассылки
-    path("mailings/", MailingListView.as_view(), name="mailings_list"),
-    path("mailings/create/", MailingCreateView.as_view(), name="mailing_create"),
-    path("mailings/update/<int:pk>/", MailingUpdateView.as_view(), name="mailing_update"),
-    path("mailings/delete/<int:pk>/", MailingDeleteView.as_view(), name="mailing_delete"),
+    path("mailings/", cache_page(60)(MailingListView.as_view()), name="mailings_list"),
+    path("mailings/create/", cache_page(60)(MailingCreateView.as_view()), name="mailing_create"),
+    path("mailings/update/<int:pk>/", cache_page(60)(MailingUpdateView.as_view()), name="mailing_update"),
+    path("mailings/delete/<int:pk>/", cache_page(60)(MailingDeleteView.as_view()), name="mailing_delete"),
     # Рассылки - ОТПРАВКА
     path("mailings/send/", MailingSendListView.as_view(), name="mailing_send_list"),
     path("mailings/send/<int:pk>/", SendMailingView.as_view(), name="mailing_send"),
@@ -51,28 +51,3 @@ urlpatterns = [
     path('users/', UserListView.as_view(), name='users_list'),
     path('users/<int:pk>/update/', UserUpdateView.as_view(), name='user_update'),
 ]
-
-# urlpatterns = [
-#     # Главная страница
-#     path("", HomeView.as_view(), name="home_view"),
-#     # Клиенты
-#     path("clients/", cache_page(60 * 15)(ClientListView.as_view()), name="clients_list"),
-#     path("clients/create/", cache_page(60 * 15)(ClientCreateView.as_view()), name="client_create"),
-#     path("clients/update/<int:pk>/", cache_page(60 * 15)(ClientUpdateView.as_view()), name="client_update"),
-#     path("clients/delete/<int:pk>/", cache_page(60 * 15)(ClientDeleteView.as_view()), name="client_delete"),
-#     # Сообщения
-#     path("messages/", cache_page(60 * 15)(MessageListView.as_view()), name="messages_list"),
-#     path("messages/create/", cache_page(60 * 15)(MessageCreateView.as_view()), name="message_create"),
-#     path("messages/update/<int:pk>/", cache_page(60 * 15)(MessageUpdateView.as_view()), name="message_update"),
-#     path("messages/delete/<int:pk>/", cache_page(60 * 15)(MessageDeleteView.as_view()), name="message_delete"),
-#     # Рассылки
-#     path("mailings/", cache_page(60 * 15)(MailingListView.as_view()), name="mailings_list"),
-#     path("mailings/create/", cache_page(60 * 15)(MailingCreateView.as_view()), name="mailing_create"),
-#     path("mailings/update/<int:pk>/", cache_page(60 * 15)(MailingUpdateView.as_view()), name="mailing_update"),
-#     path("mailings/delete/<int:pk>/", cache_page(60 * 15)(MailingDeleteView.as_view()), name="mailing_delete"),
-#     # Рассылки - ОТПРАВКА
-#     path("mailings/send/", cache_page(60 * 15)(MailingSendListView.as_view()), name="mailing_send_list"),
-#     path("mailings/send/<int:pk>/", cache_page(60 * 15)(SendMailingView.as_view()), name="mailing_send"),
-#     # Рассылки - ЛОГ
-#     path("logs/", cache_page(60 * 15)(LogListView.as_view()), name="mailing_log"),
-# ]
