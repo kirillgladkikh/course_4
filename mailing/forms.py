@@ -67,13 +67,13 @@ class MessageForm(forms.ModelForm):
 class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing
-        fields = ["start_time", "end_time", "message", "clients", "owner"]
+        fields = ["start_time", "end_time", "message", "clients"]  # , "owner"]
         widgets = {
             "start_time": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
             "end_time": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
             "message": forms.Select(attrs={"class": "form-select"}),
             "clients": forms.SelectMultiple(attrs={"class": "form-select"}),
-            "owner": forms.Select(attrs={"class": "form-select"}),
+            # "owner": forms.Select(attrs={"class": "form-select"}),
         }
 
     def clean(self):
