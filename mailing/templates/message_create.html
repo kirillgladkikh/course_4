@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <h2>Создать новое Сообщение (Письмо)</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.errors }}  <!-- Вывод всех ошибок формы -->
+        {{ form.non_field_errors }}  <!-- Ошибки, не привязанные к полям -->
+
+        <div class="mb-3">
+            <label for="id_subject" class="form-label">Тема письма
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.subject }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_body" class="form-label">Тело письма
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.body }}
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'mailing:messages_list' %}" class="btn btn-secondary">Назад к списку Сообщений</a>
+    </form>
+
+{% endblock %}

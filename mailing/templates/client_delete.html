@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <h2>Удалить Клиента</h2>
+
+    <div class="alert alert-warning">
+        <strong>Действительно хотите удалить Клиента?</strong>
+        <p><em>"{{ object.email }} {{ object.full_name }}"</em></p>  <!-- Здесь было mailing.title → меняем на object.title -->
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="d-grid gap-2 d-md-block">
+            <button type="submit" class="btn btn-danger">
+                Удалить Клиента
+            </button>
+            <a href="{% url 'mailing:clients_list' %}" class="btn btn-secondary">
+                Отменить
+            </a>
+        </div>
+    </form>
+
+{% endblock %}

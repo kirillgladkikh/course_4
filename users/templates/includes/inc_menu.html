@@ -1,0 +1,71 @@
+<!-- Навигационное меню -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Сервис рассылок</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить меню">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'mailing:home_view' %}">Главная</a>  <!--Главная страница-->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'mailing:clients_list' %}">Клиенты</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'mailing:messages_list' %}">Сообщения</a>  <!--Управление сообщениями-->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'mailing:mailings_list' %}">Рассылки</a>  <!--Управление рассылками-->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'mailing:mailing_send_list' %}">Ручная отправка</a>  <!--Отправка сообщений по требованию-->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'mailing:mailing_log' %}">Лог рассылок</a>  <!--Попытки рассылок-->
+                </li>
+
+                {% if user.is_superuser %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Управление пользователями
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'users:users_list' %}">Список пользователей</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    <div style="background: yellow; padding: 10px;">
+                        DEBUG: Пользователь user аутентифицирован как: {{ user.username }} (ID: {{ user.id }})
+                        {% if user.is_anonymous %}
+                            (но при этом anonymous!)
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div style="background: lightblue; padding: 10px;">
+                        DEBUG: Пользователь user НЕ аутентифицирован
+                    </div>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-light btn-sm mt-1" type="submit">Выход user "{% url 'users:logout' %}"</button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:login' %}">????Вход user "{% url 'users:login' %}"</a>  <!--Вход users-->
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Bootstrap JS (необходим для работы меню) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

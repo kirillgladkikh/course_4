@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Подтверждение отправки рассылки</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Рассылка №{{ mailing.id }}</h5>
+        <p><strong>Статус:</strong>
+            {% if mailing.status == 'running' %}
+                <span style="color: orange;">Запущена</span>
+            {% elif mailing.status == 'sent' %}
+                <span style="color: green;">Отправлена</span>
+            {% elif mailing.status == 'error' %}
+                <span style="color: red;">Ошибка</span>
+            {% else %}
+                {{ mailing.get_status_display|default:"Черновик" }}
+            {% endif %}
+        </p>
+        <p><strong>Тема письма:</strong> {{ mailing.message.subject }}</p>
+        <p><strong>Время отправки:</strong>
+            {{ mailing.start_time|date:"d.m.Y H:i" }} — {{ mailing.end_time|date:"d.m.Y H:i" }}
+        </p>
+        <p><strong>Получатели:</strong> {{ mailing.clients.count }} человек</p>
+
+        <!-- Список получателей (опционально) -->
+        <ul>
+            {% for client in mailing.clients.all %}
+                <li>{{ client.full_name }} ({{ client.email }})</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Форма отправки -->
+        <form action="{% url 'mailing:mailing_send' mailing.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Подтвердить отправку</button>
+            <a href="{% url 'mailing:mailing_send_list' %}" class="btn btn-secondary">Назад к списку</a>
+        </form>
+
+        <!-- Сообщение об ошибке -->
+        {% if error %}
+            <div style="color: red; margin-top: 1rem;">{{ error }}</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

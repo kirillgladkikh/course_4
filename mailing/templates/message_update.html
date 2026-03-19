@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <h2>Редактировать Сообщение (Письмо)</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.errors }}  <!-- Вывод всех ошибок формы -->
+        {{ form.non_field_errors }}  <!-- Ошибки, не привязанные к полям -->
+
+        <div class="mb-3">
+            <label for="id_subject" class="form-label">Тема письма
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.subject }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_body" class="form-label">Тело письма
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.body }}
+        </div>
+
+        <!-- Поле owner (скрыто, если пользователь не админ) -->
+        {% if request.user.is_superuser %}
+        <div class="mb-3">
+            <label for="id_owner" class="form-label">Владелец (User)
+                <span class="text-danger">*</span>
+            </label>
+            {{ form.owner }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{% url 'mailing:messages_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+
+{% endblock %}

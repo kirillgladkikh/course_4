@@ -13,10 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from django.conf.global_settings import STATICFILES_DIRS, MEDIA_URL, MEDIA_ROOT
 
 load_dotenv()
-
-from django.conf.global_settings import STATICFILES_DIRS, MEDIA_URL, MEDIA_ROOT
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,8 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # ВАЖНО:
-# 1. АКТУАЛЬНЫЙ SECRET_KEY ДЛЯ ПРОЕКТА БЕРЕМ ИЗ СОЗДАННОГО ДЖАНГО settings.py КОМАНДОЙ "django-admin startproject config ."
-# 2. ВСТАВЛЯЕМ ЭТОТ АКТУАЛЬНЫЙ SECRET_KEY В ФАЙЛ .env !!!
+# 1.АКТУАЛЬНЫЙ SECRET_KEY ДЛЯ ПРОЕКТА БЕРЕМ ИЗ СОЗДАННОГО ДЖАНГО settings.py КОМАНДОЙ "django-admin startproject config"
+# 2.ВСТАВЛЯЕМ ЭТОТ АКТУАЛЬНЫЙ SECRET_KEY В ФАЙЛ .env !!!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"  # или DEBUG = True if os.getenv('DEBUG') == "True" else False
@@ -40,19 +39,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-	# ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
-	# - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
-	# (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
+    # ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
+    # - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
+    # (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-	# СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
-    # "catalog",
-    # "blog",
-    # "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
+    'django_extensions',
+    # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
+    "mailing",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -70,7 +70,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -136,13 +136,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]  # Квадратные скобки обязательны, так как это список путей.
+# STATICFILES_DIRS = [BASE_DIR / "static"]  # Квадратные скобки обязательны, так как это список путей.
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(
-    BASE_DIR, "media"
-)  # классический и надёжный вариант для MEDIA_ROOT. Подходит для старых версий Python/Django.
-# MEDIA_ROOT = BASE_DIR / "media"  # современный и предпочтительный синтаксис (если проект использует pathlib). Эквивалентен os.path.join, но чище.
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# классический и надёжный вариант для MEDIA_ROOT. Подходит для старых версий Python/Django.
+
+# MEDIA_ROOT = BASE_DIR / "media"  # современный и предпочтительный синтаксис (если проект использует pathlib).
+# Эквивалентен os.path.join, но чище.
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -152,30 +153,35 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ВАЖНО:
 # НАДО СНЯТЬ КОММЕНТ НА AUTH_USER_MODEL, ЕСЛИ НАДО ДЕЛАТЬ НЕ СТАНДАРТНУЮ АУТЕНТИФИКАЦИЮ
 # НАПРИМЕР: КОГДА ХОЧЕШЬ ЧЕРЕЗ ЭЛ.ПОЧТУ
-# AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"
 
 # ВАЖНО:
 # СНЯТЬ КОММЕНТЫ НИЖЕ ПО МЕРЕ НАПОЛНЕНИЯ ПРОЕКТА ШАГ ЗА ШАГОМ !!!
 # ИНАЧЕ СЕРВЕР БУДЕТ РУГАТЬСЯ Т К В ПРОЕКТЕ НЕТ СООТВЕСТВУЮЩЕГО КОДА
-# LOGIN_REDIRECT_URL = "/"
-# LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 #
-# # LOGIN_REDIRECT_URL = 'library:books_list'
 # LOGIN_URL = "users:login"
 #
-# EMAIL_HOST = "smtp.yandex.ru"
-# EMAIL_PORT = 465
-# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-# EMAIL_USE_TLS = False
-# EMAIL_USE_SSL = True
-#
-# SERVER_EMAIL = EMAIL_HOST_USER
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-#
-# CACHE_ENABLED = True
-#
-# if CACHE_ENABLED:
-#     CACHES = {
-#         "default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": "redis://localhost:6379"}
-#     }
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# # КЕШ
+CACHE_ENABLED = True
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://localhost:6379",
+            "TIMEOUT": 300,  # 5 минут — время жизни кеша по умолчанию
+        }
+    }
+

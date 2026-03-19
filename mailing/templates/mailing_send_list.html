@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Ручная отправка Рассылок</h2>
+
+<!-- Сообщение об ошибке, если есть -->
+{% if error %}
+    <div style="color: red; margin-bottom: 1rem;">
+        Ошибка при отправке: {{ error }}
+    </div>
+{% endif %}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID рассылки</th>
+            <th>Начало отправки</th>
+            <th>Окончание отправки</th>
+            <th>Тема сообщения</th>
+            <th>Статус</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mailing in mailings %}
+        <tr>
+            <td>{{ mailing.id }}</td>
+            <td>{{ mailing.start_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ mailing.end_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ mailing.message.subject }}</td>
+            <td>
+                {% if mailing.status == 'running' %}
+                    <span style="color: orange;">Запущена</span>
+                {% elif mailing.status == 'sent' %}
+                    <span style="color: green;">Отправлена</span>
+                {% elif mailing.status == 'error' %}
+                    <span style="color: red;">Ошибка</span>
+                {% else %}
+                    {{ mailing.get_status_display|default:"Черновик" }}
+                {% endif %}
+            </td>
+            <td>
+                <!-- Кнопка ведёт на страницу подтверждения -->
+                <a href="{% url 'mailing:mailing_send' mailing.id %}" class="btn btn-sm btn-primary">
+                    Отправить
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

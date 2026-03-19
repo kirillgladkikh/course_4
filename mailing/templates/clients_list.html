@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Управление клиентами</h2>
+<a href="{% url 'mailing:client_create' %}" class="btn btn-primary mb-3">Добавить нового Клиента</a>
+
+<p>Всего клиентов: {{ clients|length }}</p> <!-- После проверки на пустоту -->
+
+<div class="row">
+    {% for client in clients %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"><strong>Контактный email:</strong> {{ client.email }}</p>
+                <p class="card-text"><strong>ФИО Клиента:</strong> {{ client.full_name }}</p>
+                <p class="card-text"><strong>Комментарий:</strong> {{ client.comment }}</p>
+                <p class="card-text"><strong>Владелец:</strong> {{ client.owner }}</p>
+                <div class="mt-2">
+                    <a href="{% url 'mailing:client_update' client.pk %}" class="btn btn-sm btn-outline-primary">Изменить профиль Клиента</a>
+                    <a href="{% url 'mailing:client_delete' client.pk %}" class="btn btn-sm btn-outline-danger">Удалить Клиента</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Если постов нет -->
+{% if not clients %}
+<div class="alert alert-info" role="alert">
+    Пока нет Клиентов. <a href="{% url 'mailing:client_create' %}">Создайте первого Клиента</a>.
+</div>
+{% endif %}
+
+{% endblock %}

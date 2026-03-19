@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Всего рассылок</h5>
+                    <p class="card-text display-5">{{ total_mailings }}</p>  <!-- Отображаем общее число рассылок -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Активных рассылок</h5>
+                    <p class="card-text display-5">{{ active_mailings }}</p>  <!-- Отображаем число активных рассылок -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Уникальных получателей</h5>
+                    <p class="card-text display-5">{{ total_clients }}</p>  <!-- Отображаем число уникальных клиентов -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

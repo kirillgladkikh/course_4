@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Управление Сообщениями (Письмами)</h2>
+<a href="{% url 'mailing:message_create' %}" class="btn btn-primary mb-3">Добавить новое Сообщение (Письмо)</a>
+
+<p>Всего Сообщений (Писем): {{ messages|length }}</p> <!-- После проверки на пустоту -->
+
+<div class="row">
+    {% for message in messages %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"><strong>Тема письма:</strong> {{ message.subject }}</p>
+                <p class="card-text"><strong>Тело письма:</strong> {{ message.body }}</p>
+                <p class="card-text"><strong>Владелец:</strong> {{ message.owner }}</p>
+                <div class="mt-2">
+                    <a href="{% url 'mailing:message_update' message.pk %}" class="btn btn-sm btn-outline-primary">Изменить Сообщение (Письмо)</a>
+                    <a href="{% url 'mailing:message_delete' message.pk %}" class="btn btn-sm btn-outline-danger">Удалить Сообщение (Письмо)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Если постов нет -->
+{% if not messages %}
+<div class="alert alert-info" role="alert">
+    Пока нет Сообщений (Писем). <a href="{% url 'mailing:message_create' %}">Создайте первое Сообщение (Письмо)</a>.
+</div>
+{% endif %}
+
+{% endblock %}
